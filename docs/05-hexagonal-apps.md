@@ -4,11 +4,11 @@ Applications under `apps/*` follow **hexagonal architecture** (ports and adapter
 
 ## Core ideas
 
-| Concept | Role |
-| --- | --- |
-| **Domain / application core** | Entities, value objects, and **use cases** (application services). No imports from Next.js, React, or `fetch` in the core — only pure rules and orchestration. |
-| **Ports** | **Interfaces** the core defines: “what I need from the outside world” (driven) or “how the outside world invokes me” (driving, often implicit as use-case entry points). |
-| **Adapters** | **Implementations** of ports: translate between the core and concrete technologies. |
+| Concept                       | Role                                                                                                                                                                     |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Domain / application core** | Entities, value objects, and **use cases** (application services). No imports from Next.js, React, or `fetch` in the core — only pure rules and orchestration.           |
+| **Ports**                     | **Interfaces** the core defines: “what I need from the outside world” (driven) or “how the outside world invokes me” (driving, often implicit as use-case entry points). |
+| **Adapters**                  | **Implementations** of ports: translate between the core and concrete technologies.                                                                                      |
 
 ## Driving vs driven
 

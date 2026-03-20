@@ -1,0 +1,9 @@
+# Default: primary maintainer (adjust when the team grows)
+* @abelpz
+
+# Apps and Door43 integration — require awareness for review routing
+/apps/ @abelpz
+/packages/door43/ @abelpz
+
+# Automation & security policy
+/.github/ @abelpz

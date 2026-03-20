@@ -10,12 +10,12 @@ Biblia Studio maintains **additional** documentation in this repo for:
 
 ## Rules of thumb
 
-| Situation | Where to document |
-| --- | --- |
-| “How does Resource Container X work?” | Link to uW-Tools-Collab / docs.page; add a short summary only if needed for navigation. |
-| “How does `@biblia-studio/formats` parse or validate X?” | Package `README.md` + optional `docs/` deep dive. |
-| “How do we authenticate to Door43 in this monorepo?” | `@biblia-studio/door43` README + env var table. |
-| “What is Biblia Studio for?” | [Overview](./00-overview.md) and root `README.md`. |
+| Situation                                                | Where to document                                                                       |
+| -------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| “How does Resource Container X work?”                    | Link to uW-Tools-Collab / docs.page; add a short summary only if needed for navigation. |
+| “How does `@biblia-studio/formats` parse or validate X?” | Package `README.md` + optional `docs/` deep dive.                                       |
+| “How do we authenticate to Door43 in this monorepo?”     | `@biblia-studio/door43` README + env var table.                                         |
+| “What is Biblia Studio for?”                             | [Overview](./00-overview.md) and root `README.md`.                                      |
 
 ## Contributing docs
 

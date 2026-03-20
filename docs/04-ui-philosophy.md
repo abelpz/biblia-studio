@@ -1,15 +1,15 @@
 # UI philosophy
 
-Biblia Studio front ends follow a **layered UI model** described by Adam Argyle in [*Headless, boneless, skinless & lifeless UI*](https://nerdy.dev/headless-boneless-and-skinless-ui) (nerdy.dev, 2024). The article separates concerns so teams can **compose** behavior, structure, and styling instead of defaulting to single “batteries included” kits.
+Biblia Studio front ends follow a **layered UI model** described by Adam Argyle in [_Headless, boneless, skinless & lifeless UI_](https://nerdy.dev/headless-boneless-and-skinless-ui) (nerdy.dev, 2024). The article separates concerns so teams can **compose** behavior, structure, and styling instead of defaulting to single “batteries included” kits.
 
 ## Terms (from the article)
 
-| Layer | Idea | You bring |
-| --- | --- | --- |
-| **Headless** | Components with **behavior and structure**, minimal styling | Visual design (skin) |
-| **Boneless** | **Style systems** — tokens, utilities, premade combinations | Markup / components (bones) and behavior (life) |
-| **Skinless** | **Unstyled, functioning markup** (bones without opinionated skin) | Styling and app-specific “life” wiring |
-| **Lifeless** | **Logic only** — hooks, state, types; **no rendered UI** | Elements, layout, and styles (bones + skin) |
+| Layer        | Idea                                                              | You bring                                       |
+| ------------ | ----------------------------------------------------------------- | ----------------------------------------------- |
+| **Headless** | Components with **behavior and structure**, minimal styling       | Visual design (skin)                            |
+| **Boneless** | **Style systems** — tokens, utilities, premade combinations       | Markup / components (bones) and behavior (life) |
+| **Skinless** | **Unstyled, functioning markup** (bones without opinionated skin) | Styling and app-specific “life” wiring          |
+| **Lifeless** | **Logic only** — hooks, state, types; **no rendered UI**          | Elements, layout, and styles (bones + skin)     |
 
 Argyle’s point is that “headless” is often used loosely; splitting **skinless** (unstyled bones) and **lifeless** (pure logic) makes it clearer what a library actually owns.
 

@@ -4,24 +4,31 @@ Humans supervise and review all changes. Optimize for **small, reviewable diffs*
 
 ## Read first
 
-1. **[`README.md`](./README.md)** — scope and commands  
-2. **[`docs/00-overview.md`](./docs/00-overview.md)** — principles  
-3. **[`docs/02-package-map.md`](./docs/02-package-map.md)** — where code belongs  
-4. **[`docs/04-ui-philosophy.md`](./docs/04-ui-philosophy.md)** — UI layers  
-5. **[`docs/05-hexagonal-apps.md`](./docs/05-hexagonal-apps.md)** — apps: ports & adapters  
-6. **[`docs/06-ai-and-human-workflow.md`](./docs/06-ai-and-human-workflow.md)** — review gates, security, dependencies  
+1. **[`README.md`](./README.md)** — scope and commands
+2. **[`docs/00-overview.md`](./docs/00-overview.md)** — principles
+3. **[`docs/02-package-map.md`](./docs/02-package-map.md)** — where code belongs
+4. **[`docs/04-ui-philosophy.md`](./docs/04-ui-philosophy.md)** — UI layers
+5. **[`docs/05-hexagonal-apps.md`](./docs/05-hexagonal-apps.md)** — apps: ports & adapters
+6. **[`docs/06-ai-and-human-workflow.md`](./docs/06-ai-and-human-workflow.md)** — review gates, security, dependencies
+7. **[`docs/07-github-mcp.md`](./docs/07-github-mcp.md)** — GitHub MCP: set `GITHUB_MCP_PAT`, restart Cursor
+8. **[`docs/08-github-agent-workflow.md`](./docs/08-github-agent-workflow.md)** — **default GitHub workflow** (issues → branch → push → PR via MCP); humans merge
+9. **[`docs/10-first-project.md`](./docs/10-first-project.md)** — checklist before the first real feature (CI on GitHub, branch protection, labels)
 
 For Door43 / unfoldingWord **formats and APIs**, link to upstream; do not copy large spec text — see [`docs/01-ecosystem-references.md`](./docs/01-ecosystem-references.md).
 
+### GitHub delivery
+
+When work is tracked on GitHub, follow **[`docs/08-github-agent-workflow.md`](./docs/08-github-agent-workflow.md)**: one issue per slice, branch `agent/<issue>-slug`, PR with `Closes #NN`, draft until verified, **do not merge** unless a human explicitly requests it for that task.
+
 ## Hard rules
 
-- **Scope** — Change only what the task requires. No drive-by refactors or unrelated formatting.  
-- **Architecture** — `@biblia-studio/*` = shared domain and infrastructure building blocks. `apps/*` = composition, **hexagonal** wiring, UI. Do not put Door43 fetch logic or USFM parsing inside React leaves; use ports/adapters and packages.  
-- **UI** — Prefer lifeless → skinless/headless → boneless per [`docs/04-ui-philosophy.md`](./docs/04-ui-philosophy.md).  
-- **Secrets** — Never commit tokens, passwords, or private keys. Use env vars documented in README or package README; use placeholders in examples.  
-- **Upstream truth** — Specs for RC/USFM/Door43 live in [uW-Tools-Collab](https://github.com/unfoldingWord/uW-Tools-Collab) and linked docs; cite them when behavior is spec-driven.  
-- **Dependencies** — New runtime dependencies need a one-line justification in the PR/summary (security, size, maintenance). Prefer stdlib / existing stack unless clearly insufficient.  
-- **Tests** — Add or update tests when behavior is non-trivial or regression-prone; run the narrowest relevant check before finishing (`bun run check-types`, `bun run lint`, targeted test if present).  
+- **Scope** — Change only what the task requires. No drive-by refactors or unrelated formatting.
+- **Architecture** — `@biblia-studio/*` = shared domain and infrastructure building blocks. `apps/*` = composition, **hexagonal** wiring, UI. Do not put Door43 fetch logic or USFM parsing inside React leaves; use ports/adapters and packages.
+- **UI** — Prefer lifeless → skinless/headless → boneless per [`docs/04-ui-philosophy.md`](./docs/04-ui-philosophy.md).
+- **Secrets** — Never commit tokens, passwords, or private keys. Use env vars documented in README or package README; use placeholders in examples.
+- **Upstream truth** — Specs for RC/USFM/Door43 live in [uW-Tools-Collab](https://github.com/unfoldingWord/uW-Tools-Collab) and linked docs; cite them when behavior is spec-driven.
+- **Dependencies** — New runtime dependencies need a one-line justification in the PR/summary (security, size, maintenance). Prefer stdlib / existing stack unless clearly insufficient.
+- **Tests** — Add or update tests when behavior is non-trivial or regression-prone; run the narrowest relevant check before finishing (`bun run check-types`, `bun run lint`, targeted test if present).
 
 ## Before you finish a task
 
@@ -36,13 +43,15 @@ If you touched production build paths:
 bun run build
 ```
 
+**CI** runs the same steps on pull requests ([`.github/workflows/ci.yml`](./.github/workflows/ci.yml)). PRs should pass before merge.
+
 Report what you ran and any failures or skips.
 
 ## When to stop and leave notes for humans
 
-- Ambiguous product or security tradeoff  
-- New third-party service or OAuth scope  
-- Breaking API or data migration  
-- Copying or mirroring large upstream documentation (link + short summary instead)  
+- Ambiguous product or security tradeoff
+- New third-party service or OAuth scope
+- Breaking API or data migration
+- Copying or mirroring large upstream documentation (link + short summary instead)
 
 State open questions explicitly at the end of your summary so reviewers can decide quickly.

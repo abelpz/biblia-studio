@@ -13,12 +13,12 @@
 
 ## Repository layout
 
-| Area | Path | Role |
-| --- | --- | --- |
-| Documentation | `docs/` | Product and technical docs maintained in this repo |
-| Bible-tool libraries | `packages/*` | `@biblia-studio/*` packages (see [package map](./02-package-map.md)) |
-| Applications | `apps/*` | Next.js (or future) apps; [hexagonal](./05-hexagonal-apps.md) composition at the edges |
-| Shared config | `packages/eslint-config`, `packages/typescript-config` | Lint and TS bases for the whole workspace |
+| Area                 | Path                                                   | Role                                                                                   |
+| -------------------- | ------------------------------------------------------ | -------------------------------------------------------------------------------------- |
+| Documentation        | `docs/`                                                | Product and technical docs maintained in this repo                                     |
+| Bible-tool libraries | `packages/*`                                           | `@biblia-studio/*` packages (see [package map](./02-package-map.md))                   |
+| Applications         | `apps/*`                                               | Next.js (or future) apps; [hexagonal](./05-hexagonal-apps.md) composition at the edges |
+| Shared config        | `packages/eslint-config`, `packages/typescript-config` | Lint and TS bases for the whole workspace                                              |
 
 ## What this repo is not (yet)
 
