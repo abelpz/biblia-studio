@@ -1,0 +1,52 @@
+# AI agents and human review
+
+Biblia Studio is built primarily by **AI coding agents**, with **humans** responsible for direction, review, and merge decisions. This doc aligns expectations and reduces repeated mistakes.
+
+## Roles
+
+| Role | Responsibility |
+| --- | --- |
+| **Agent** | Implement scoped tasks; follow [`AGENTS.md`](../AGENTS.md) and architecture docs; run checks; document assumptions. |
+| **Human reviewer** | Validate product fit, security, architecture boundaries, dependency risk, and accessibility; approve or request changes. |
+| **Human maintainer** | Own roadmap, credentials, releases, and escalation when agents hit policy limits. |
+
+## What agents must do
+
+1. **Read the doc stack** listed in [`AGENTS.md`](../AGENTS.md) before large or cross-cutting work.  
+2. **Keep diffs focused** — one coherent change per session/task; avoid opportunistic cleanup.  
+3. **Respect package boundaries** — see [Package map](./02-package-map.md).  
+4. **Hexagonal apps** — core/use cases do not import Next.js or `fetch` directly; see [Hexagonal apps](./05-hexagonal-apps.md).  
+5. **Run verification** — at minimum `bun run lint` and `bun run check-types`; `bun run build` when build-affecting paths change.  
+6. **Surface uncertainty** — explicit questions for humans when requirements conflict with docs or common sense.
+
+## What human reviewers should verify
+
+- [ ] **Security** — No secrets in repo; env vars only; safe handling of auth tokens and user content.  
+- [ ] **Data & scripture integrity** — Parsing, merging, or publishing paths do not silently corrupt or drop content; edge cases called out.  
+- [ ] **Architecture** — UI/routes as driving adapters; Door43/format code behind ports or in `@biblia-studio/*` as agreed.  
+- [ ] **UI philosophy** — Styling and primitives align with [UI philosophy](./04-ui-philosophy.md) unless the PR documents a deliberate exception.  
+- [ ] **Upstream alignment** — Door43 / RC / USFM behavior matches cited specs or issues are filed for intentional divergence.  
+- [ ] **Dependencies** — New packages justified; license compatible; supply-chain risk acceptable.  
+- [ ] **Tests & docs** — Meaningful behavior changes include tests and/or doc updates (README, `docs/`, or package README).  
+- [ ] **Accessibility** — Interactive UI: keyboard, labels, focus; no “click-only” critical paths without reviewer sign-off.
+
+## Suggested additions (as the project grows)
+
+| Artifact | Why |
+| --- | --- |
+| **CI** (GitHub Actions or similar) | Run `lint`, `check-types`, `build` on every PR so agents cannot skip checks. |
+| **`docs/adr/`** | Short Architecture Decision Records for irreversible choices (auth model, editor storage, sync strategy). |
+| **`CODEOWNERS`** | Route sensitive paths to designated humans. |
+| **`CONTRIBUTING.md`** | Human-focused clone/install/PR flow; can duplicate pointers to `AGENTS.md`. |
+| **Issue templates** | Separate “agent task” vs “human decision” templates to reduce ambiguity. |
+| **Security policy** | `SECURITY.md` for vulnerability reporting if the repo is public or widely used. |
+
+## Communication norms
+
+- Agents: end summaries with **what changed**, **commands run**, and **risks / follow-ups**.  
+- Humans: prefer **concrete** change requests (file + intent) over generic “make it better.”
+
+## Related
+
+- [`AGENTS.md`](../AGENTS.md) — concise agent rules  
+- [Extending upstream docs](./03-extending-upstream-docs.md) — what we document vs link  

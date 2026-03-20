@@ -1,0 +1,16 @@
+---
+description: Biblia Studio monorepo — agent rules, architecture, and doc pointers
+alwaysApply: true
+---
+
+# Biblia Studio
+
+Follow **`AGENTS.md`** (repo root) first.
+
+- **Packages:** `docs/02-package-map.md` — `@biblia-studio/*` vs `apps/*`.
+- **Apps:** Hexagonal — `docs/05-hexagonal-apps.md`; UI as driving adapters only.
+- **UI:** `docs/04-ui-philosophy.md` — lifeless / skinless / headless / boneless.
+- **Upstream:** Door43 / formats — link [uW-Tools-Collab](https://github.com/unfoldingWord/uW-Tools-Collab); do not duplicate long spec prose.
+- **Workflow:** `docs/06-ai-and-human-workflow.md` — human review expectations.
+
+**Non-negotiables:** No secrets in code; minimal diffs; run `bun run lint` and `bun run check-types` before finishing; new deps need justification.

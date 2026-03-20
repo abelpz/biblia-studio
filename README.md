@@ -1,159 +1,69 @@
-# Turborepo starter
+# Biblia Studio
 
-This Turborepo starter is maintained by the Turborepo core team.
+**Biblia Studio** is a [Bun](https://bun.sh/) + [Turborepo](https://turborepo.dev/) monorepo for **libraries and applications** that power Bible tools: **editing**, **translation**, **project management**, **study**, and **publishing**. We align with the [unfoldingWord](https://www.unfoldingword.org/) / [Door43](https://door43.org/) ecosystem (resource formats, APIs, and translation helps).
 
-## Using this example
+Development is **AI-agent led** with **human review** — start from [`AGENTS.md`](./AGENTS.md) and [`docs/06-ai-and-human-workflow.md`](./docs/06-ai-and-human-workflow.md).
 
-Run the following command:
+## Documentation in this repo
 
-```sh
-npx create-turbo@latest
-```
+| Resource | Description |
+| --- | --- |
+| **[`docs/README.md`](./docs/README.md)** | Index of internal technical docs |
+| **[`docs/00-overview.md`](./docs/00-overview.md)** | Mission, principles, layout |
+| **[`docs/01-ecosystem-references.md`](./docs/01-ecosystem-references.md)** | Upstream canonical docs ([uW-Tools-Collab](https://github.com/unfoldingWord/uW-Tools-Collab), [docs.page](https://docs.page/unfoldingWord/uW-Tools-Collab), [Door43 Swagger](https://git.door43.org/api/swagger)) |
+| **[`docs/02-package-map.md`](./docs/02-package-map.md)** | `@biblia-studio/*` package boundaries |
+| **[`docs/03-extending-upstream-docs.md`](./docs/03-extending-upstream-docs.md)** | How we extend (not replace) collab documentation |
+| **[`docs/04-ui-philosophy.md`](./docs/04-ui-philosophy.md)** | UI layers: [headless, boneless, skinless & lifeless](https://nerdy.dev/headless-boneless-and-skinless-ui) (Argyle / nerdy.dev) |
+| **[`docs/05-hexagonal-apps.md`](./docs/05-hexagonal-apps.md)** | Apps use [hexagonal architecture](https://alistair.cockburn.us/hexagonal-architecture/) (ports & adapters) |
+| **[`docs/06-ai-and-human-workflow.md`](./docs/06-ai-and-human-workflow.md)** | AI agents + human review — roles, checklists, future CI/ADRs |
+| **[`AGENTS.md`](./AGENTS.md)** | Short rules for coding agents (read this first in agent sessions) |
 
-## What's inside?
+Upstream **Door43 / unfoldingWord developer documentation** is maintained in **[unfoldingWord/uW-Tools-Collab](https://github.com/unfoldingWord/uW-Tools-Collab)**; Biblia Studio adds monorepo-specific architecture and implementation guides here.
 
-This Turborepo includes the following packages/apps:
+## Workspace packages
 
-### Apps and Packages
+### Bible-tool libraries (`@biblia-studio/*`)
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+| Package | Role |
+| --- | --- |
+| [`@biblia-studio/core`](./packages/core) | Shared primitives |
+| [`@biblia-studio/formats`](./packages/formats) | Scripture & resource formats |
+| [`@biblia-studio/door43`](./packages/door43) | Door43 API integration |
+| [`@biblia-studio/editing`](./packages/editing) | Translation editing |
+| [`@biblia-studio/translation`](./packages/translation) | Translation workflows |
+| [`@biblia-studio/project`](./packages/project) | Project management |
+| [`@biblia-studio/study`](./packages/study) | Study / helps composition |
+| [`@biblia-studio/publishing`](./packages/publishing) | Publishing & validation |
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+### Starter shared config (`@repo/*`)
 
-### Utilities
+[`@repo/ui`](./packages/ui), [`@repo/eslint-config`](./packages/eslint-config), [`@repo/typescript-config`](./packages/typescript-config) — from the Turborepo template; apps under `apps/*` consume these. Shared UI should follow [`docs/04-ui-philosophy.md`](./docs/04-ui-philosophy.md).
 
-This Turborepo has some additional tools already setup for you:
+## Apps
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+- **`apps/web`** — primary web shell (Next.js)
+- **`apps/docs`** — secondary Next app (rename or repurpose as needed)
 
-### Build
+Both follow **[hexagonal architecture](https://alistair.cockburn.us/hexagonal-architecture/)** — see [`docs/05-hexagonal-apps.md`](./docs/05-hexagonal-apps.md) for ports/adapters, how UI and `@biblia-studio/*` fit, and a suggested folder layout.
 
-To build all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo build
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
-```
-
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+## Commands
 
 ```sh
-turbo build --filter=docs
+bun install
+bun run dev          # all apps with a dev script
+bun run build
+bun run lint
+bun run check-types
 ```
 
-Without global `turbo`:
+Filtered examples:
 
 ```sh
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
+bunx turbo dev --filter=web
+bunx turbo lint --filter=@biblia-studio/formats
 ```
 
-### Develop
+## Turborepo reference
 
-To develop all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo dev
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo dev --filter=web
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo login
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo link
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+- [Running tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
+- [Remote caching](https://turborepo.dev/docs/core-concepts/remote-caching) — optional: `bunx turbo login` / `bunx turbo link`

@@ -48,6 +48,46 @@
         "typescript": "5.9.2",
       },
     },
+    "packages/core": {
+      "name": "@biblia-studio/core",
+      "version": "0.0.0",
+      "devDependencies": {
+        "@repo/eslint-config": "*",
+        "@repo/typescript-config": "*",
+        "@types/node": "^22.15.3",
+        "eslint": "^9.39.1",
+        "typescript": "5.9.2",
+      },
+    },
+    "packages/door43": {
+      "name": "@biblia-studio/door43",
+      "version": "0.0.0",
+      "dependencies": {
+        "@biblia-studio/core": "*",
+      },
+      "devDependencies": {
+        "@repo/eslint-config": "*",
+        "@repo/typescript-config": "*",
+        "@types/node": "^22.15.3",
+        "eslint": "^9.39.1",
+        "typescript": "5.9.2",
+      },
+    },
+    "packages/editing": {
+      "name": "@biblia-studio/editing",
+      "version": "0.0.0",
+      "dependencies": {
+        "@biblia-studio/door43": "*",
+        "@biblia-studio/formats": "*",
+      },
+      "devDependencies": {
+        "@repo/eslint-config": "*",
+        "@repo/typescript-config": "*",
+        "@types/node": "^22.15.3",
+        "eslint": "^9.39.1",
+        "typescript": "5.9.2",
+      },
+    },
     "packages/eslint-config": {
       "name": "@repo/eslint-config",
       "version": "0.0.0",
@@ -63,6 +103,78 @@
         "globals": "^16.5.0",
         "typescript": "^5.9.2",
         "typescript-eslint": "^8.50.0",
+      },
+    },
+    "packages/formats": {
+      "name": "@biblia-studio/formats",
+      "version": "0.0.0",
+      "dependencies": {
+        "@biblia-studio/core": "*",
+      },
+      "devDependencies": {
+        "@repo/eslint-config": "*",
+        "@repo/typescript-config": "*",
+        "@types/node": "^22.15.3",
+        "eslint": "^9.39.1",
+        "typescript": "5.9.2",
+      },
+    },
+    "packages/project": {
+      "name": "@biblia-studio/project",
+      "version": "0.0.0",
+      "dependencies": {
+        "@biblia-studio/door43": "*",
+      },
+      "devDependencies": {
+        "@repo/eslint-config": "*",
+        "@repo/typescript-config": "*",
+        "@types/node": "^22.15.3",
+        "eslint": "^9.39.1",
+        "typescript": "5.9.2",
+      },
+    },
+    "packages/publishing": {
+      "name": "@biblia-studio/publishing",
+      "version": "0.0.0",
+      "dependencies": {
+        "@biblia-studio/door43": "*",
+        "@biblia-studio/formats": "*",
+      },
+      "devDependencies": {
+        "@repo/eslint-config": "*",
+        "@repo/typescript-config": "*",
+        "@types/node": "^22.15.3",
+        "eslint": "^9.39.1",
+        "typescript": "5.9.2",
+      },
+    },
+    "packages/study": {
+      "name": "@biblia-studio/study",
+      "version": "0.0.0",
+      "dependencies": {
+        "@biblia-studio/formats": "*",
+      },
+      "devDependencies": {
+        "@repo/eslint-config": "*",
+        "@repo/typescript-config": "*",
+        "@types/node": "^22.15.3",
+        "eslint": "^9.39.1",
+        "typescript": "5.9.2",
+      },
+    },
+    "packages/translation": {
+      "name": "@biblia-studio/translation",
+      "version": "0.0.0",
+      "dependencies": {
+        "@biblia-studio/door43": "*",
+        "@biblia-studio/formats": "*",
+      },
+      "devDependencies": {
+        "@repo/eslint-config": "*",
+        "@repo/typescript-config": "*",
+        "@types/node": "^22.15.3",
+        "eslint": "^9.39.1",
+        "typescript": "5.9.2",
       },
     },
     "packages/typescript-config": {
@@ -88,6 +200,22 @@
     },
   },
   "packages": {
+    "@biblia-studio/core": ["@biblia-studio/core@workspace:packages/core"],
+
+    "@biblia-studio/door43": ["@biblia-studio/door43@workspace:packages/door43"],
+
+    "@biblia-studio/editing": ["@biblia-studio/editing@workspace:packages/editing"],
+
+    "@biblia-studio/formats": ["@biblia-studio/formats@workspace:packages/formats"],
+
+    "@biblia-studio/project": ["@biblia-studio/project@workspace:packages/project"],
+
+    "@biblia-studio/publishing": ["@biblia-studio/publishing@workspace:packages/publishing"],
+
+    "@biblia-studio/study": ["@biblia-studio/study@workspace:packages/study"],
+
+    "@biblia-studio/translation": ["@biblia-studio/translation@workspace:packages/translation"],
+
     "@emnapi/runtime": ["@emnapi/runtime@1.9.1", "", { "dependencies": { "tslib": "^2.4.0" } }, "sha512-VYi5+ZVLhpgK4hQ0TAjiQiZ6ol0oe4mBx7mVv7IflsiEp0OWoVsp/+f9Vc1hOhE0TtkORVrI1GvzyreqpgWtkA=="],
 
     "@eslint-community/eslint-utils": ["@eslint-community/eslint-utils@4.9.1", "", { "dependencies": { "eslint-visitor-keys": "^3.4.3" }, "peerDependencies": { "eslint": "^6.0.0 || ^7.0.0 || >=8.0.0" } }, "sha512-phrYmNiYppR7znFEdqgfWHXR6NCkZEK7hwWDHZUjit/2/U0r6XvkDl0SYnoM51Hq7FhCGdLDT6zxCCOY1hexsQ=="],
