@@ -42,11 +42,13 @@ Biblia Studio is built primarily by **AI coding agents**, with **humans** respon
 | **`SECURITY.md`** ([root](../SECURITY.md))                                    | **Done** — Vulnerability reporting (advisory / private contact).                                                             |
 | **GitHub labels** (`agent`, `needs-triage`)                                   | **Done** on `abelpz/biblia-studio` via `gh label create`.                                                                    |
 
-### Still manual on GitHub
+### Optional GitHub settings
 
-| Artifact              | Why                                                                                                      |
-| --------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Branch protection** | Enforce green CI on `main` — [after CI has run once](./09-ci-and-branch-protection.md) (UI or `gh api`). |
+| Artifact                                            | Notes                                                                                                                        |
+| --------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| **Require a pull request before merging to `main`** | Not required by current rules — [turn on](./09-ci-and-branch-protection.md) if you want to disallow direct pushes to `main`. |
+
+**Branch protection** (required passing **`checks`** on `main`, strict) is **enabled** on `abelpz/biblia-studio`; see [CI & branch protection](./09-ci-and-branch-protection.md).
 
 ## Communication norms
 

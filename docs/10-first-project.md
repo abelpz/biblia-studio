@@ -4,13 +4,13 @@ Use this before **planning the first real feature** (beyond repo scaffolding).
 
 ## Repository (one-time)
 
-| Step                                                                                      | Status                                                                      |
-| ----------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| Latest `main` includes **CI** ([`.github/workflows/ci.yml`](../.github/workflows/ci.yml)) | Push/merge if not on GitHub yet                                             |
-| **Labels** `agent` and `needs-triage` exist                                               | `gh label create …` (see [Contributing](../CONTRIBUTING.md)) or GitHub UI   |
-| **Branch protection** on `main` requires PR + green **CI**                                | [Configure after first successful CI run](./09-ci-and-branch-protection.md) |
-| **`CODEOWNERS`** present                                                                  | [`.github/CODEOWNERS`](../.github/CODEOWNERS)                               |
-| **`SECURITY.md`** present                                                                 | [root `SECURITY.md`](../SECURITY.md)                                        |
+| Step                                                                                      | Status                                                                                                                           |
+| ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Latest `main` includes **CI** ([`.github/workflows/ci.yml`](../.github/workflows/ci.yml)) | **Done** — runs on every PR and push to `main`                                                                                   |
+| **Labels** `agent` and `needs-triage` exist                                               | **Done** on `abelpz/biblia-studio`                                                                                               |
+| **Branch protection** on `main` requires green **CI** (`checks` job, strict)              | **Done** — see [CI & branch protection](./09-ci-and-branch-protection.md); optionally add “require PR” in GitHub branch settings |
+| **`CODEOWNERS`** present                                                                  | [`.github/CODEOWNERS`](../.github/CODEOWNERS)                                                                                    |
+| **`SECURITY.md`** present                                                                 | [root `SECURITY.md`](../SECURITY.md)                                                                                             |
 
 ## Planning session (your team)
 
@@ -20,4 +20,4 @@ Use this before **planning the first real feature** (beyond repo scaffolding).
 4. **Branch** — `agent/<issue>-short-name` per [GitHub agent workflow](./08-github-agent-workflow.md).
 5. **PR** — Draft first; mark ready when `lint` / `check-types` / `build` pass locally and on CI.
 
-When the table above is satisfied and an issue exists with clear acceptance criteria, you are ready to **start implementation planning** in Cursor against that issue.
+When you have a **goal** and an **Agent task** issue with acceptance criteria, you are ready to **start planning and implementation** in Cursor against that issue — the repository checklist above is already satisfied for `abelpz/biblia-studio`.

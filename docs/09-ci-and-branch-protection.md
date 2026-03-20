@@ -24,6 +24,12 @@ CI only **reports** status; **branch protection** enforces it. A maintainer shou
 
 Until this is enabled, merges can still proceed without a green CI if someone has rights.
 
+### Applied on `abelpz/biblia-studio`
+
+`main` is configured to **require the `checks` status** (GitHub Actions job from [`.github/workflows/ci.yml`](../.github/workflows/ci.yml)) with **strict** updates (branch must be up to date before merge). This was set via the GitHub API after the first green run.
+
+**Optional:** Turn on **Require a pull request before merging** in **Settings → Branches** if you want to disallow direct pushes to `main` (solo maintainers may rely on admin bypass or keep direct pushes for emergencies).
+
 ### Finding the exact status check name
 
 After **one successful** workflow run on `main` or a PR, open **Actions** → latest **CI** run → the job is named **`checks`**. In branch protection, the selectable check often appears as **`CI / checks`** (workflow file name + job id).
