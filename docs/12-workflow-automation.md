@@ -26,7 +26,17 @@ After each **phase** or deliverable in that flow, agents should still run the re
 
 **CI:** This workflow does not replace [`ci.yml`](./09-ci-and-branch-protection.md); it only adds comments.
 
-## 3. What is not automated
+## 3. GitHub Actions — delete merged PR branches
+
+**Path:** [`.github/workflows/cleanup-merged-branch.yml`](../.github/workflows/cleanup-merged-branch.yml)
+
+| Trigger                                    | What happens                                                                                                                                                                     |
+| ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Pull request** **closed** and **merged** | Deletes the **head branch** on this repo (same behavior as clicking **Delete branch** on the merged PR). Skips forks (only same-repo heads). Does not delete the default branch. |
+
+**Why:** Keeps `agent/…` and feature branches from accumulating after merge without relying on a manual setting. **Dependabot** merged PRs also get their head branch removed when this workflow runs.
+
+## 4. What is not automated
 
 - Choosing product scope or approving package splits (**human**).
 - Creating or editing issues/PRs (unless you use **GitHub MCP** in Cursor manually).

@@ -16,7 +16,7 @@ Humans supervise and review all changes. Optimize for **small, reviewable diffs*
 8. **[`docs/08-github-agent-workflow.md`](./docs/08-github-agent-workflow.md)** — **default GitHub workflow** (issues → branch → push → PR via MCP); humans merge
 9. **[`docs/10-first-project.md`](./docs/10-first-project.md)** — checklist before the first real feature (CI on GitHub, branch protection, labels)
 10. **[`docs/11-new-project-workflow.md`](./docs/11-new-project-workflow.md)** — **human + agent** discovery; package boundaries and modularity **emerge**—update [`docs/02-package-map.md`](./docs/02-package-map.md) when seams stabilize
-11. **[`docs/12-workflow-automation.md`](./docs/12-workflow-automation.md)** — **`/new-initiative`** in Cursor; GitHub bot comments on agent issues / PRs without `Closes #`
+11. **[`docs/12-workflow-automation.md`](./docs/12-workflow-automation.md)** — **`/new-initiative`** in Cursor; GitHub bot comments on agent issues / PRs without `Closes #`; merged PR **head branches** are deleted via [`cleanup-merged-branch.yml`](./.github/workflows/cleanup-merged-branch.yml)
 12. **[`docs/13-milestones-and-scope.md`](./docs/13-milestones-and-scope.md)** — milestones vs drift; **Alignment** summaries; when to escalate (desist, new issue, new milestone)
 
 For Door43 / unfoldingWord **formats and APIs**, link to upstream; do not copy large spec text — see [`docs/01-ecosystem-references.md`](./docs/01-ecosystem-references.md). For **[FIA](https://fia.bible/about)** (translation prep / study process), link the site; it is **not** an RC/DCS spec — keep storage behind adapters like any other content.
