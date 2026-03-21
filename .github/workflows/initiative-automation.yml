@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'issues'
     steps:
-      - uses: actions/github-script@v7
+      - uses: actions/github-script@v8
         with:
           script: |
             const marker = '<!-- biblia-studio:initiative-bot:issue:v1 -->';
@@ -93,7 +93,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
     steps:
-      - uses: actions/github-script@v7
+      - uses: actions/github-script@v8
         with:
           script: |
             const marker = '<!-- biblia-studio:initiative-bot:pr:v1 -->';
