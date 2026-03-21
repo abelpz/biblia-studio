@@ -9,7 +9,7 @@ On every **push** to `main` and every **pull request** targeting `main`, GitHub 
 1. Checks out the repo on **Ubuntu**
 2. Installs **Bun** `1.3.3` (matches [`package.json`](../package.json) `packageManager`)
 3. Runs `bun install --frozen-lockfile`
-4. Runs `bun run lint` → `bun run check-types` → `bun run build`
+4. Runs `bun run lint` → `bun run check-types` → `bun run test` → `bun run build`
 
 PRs should stay green before merge. Agents must run the same commands locally when possible ([`AGENTS.md`](../AGENTS.md)).
 

@@ -14,6 +14,8 @@ Use this before **planning the first real feature** (beyond repo scaffolding).
 
 ## Planning session (your team)
 
+For **questions and ordered steps** when kicking off a new initiative, use **[New project / initiative workflow](./11-new-project-workflow.md)** (discovery checklist + delivery phases).
+
 1. **Goal** — One sentence: what the first deliverable is (e.g. “read-only Door43 repo list in `apps/web`”).
 2. **Issue** — Open an [**Agent task**](../.github/ISSUE_TEMPLATE/agent-task.yml) with acceptance criteria and **Out of scope**.
 3. **ADR only if needed** — If the decision is hard to reverse (auth, data model), add `docs/adr/0001-….md`; otherwise skip.

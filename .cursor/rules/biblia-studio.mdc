@@ -5,16 +5,21 @@ alwaysApply: true
 
 # Biblia Studio
 
-Follow **`AGENTS.md`** (repo root) first.
+Follow **`docs/PRINCIPLES.md`** (digest) then **`AGENTS.md`** (repo root).
 
 - **Packages:** `docs/02-package-map.md` — `@biblia-studio/*` vs `apps/*`.
 - **Apps:** Hexagonal — `docs/05-hexagonal-apps.md`; UI as driving adapters only.
 - **UI:** `docs/04-ui-philosophy.md` — lifeless / skinless / headless / boneless.
-- **Upstream:** Door43 / formats — link [uW-Tools-Collab](https://github.com/unfoldingWord/uW-Tools-Collab); do not duplicate long spec prose.
+- **Upstream:** Door43 / formats — link [uW-Tools-Collab](https://github.com/unfoldingWord/uW-Tools-Collab); do not duplicate long spec prose. **[FIA](https://fia.bible/about)** — link for translation-prep / study meaning; not RC/DCS — see `docs/01-ecosystem-references.md`.
 - **Workflow:** `docs/06-ai-and-human-workflow.md` — human review expectations.
 - **GitHub MCP:** `.cursor/mcp.json` + env `GITHUB_MCP_PAT` — see `docs/07-github-mcp.md`.
 - **GitHub workflow:** `docs/08-github-agent-workflow.md` — issue → branch → push → draft PR (MCP); humans merge.
-- **CI:** `.github/workflows/ci.yml` — same as local `lint` / `check-types` / `build`; PRs should pass.
+- **CI:** `.github/workflows/ci.yml` — same as local `lint` / `check-types` / `test` / `build`; PRs should pass.
 - **First feature:** `docs/10-first-project.md` — CI on GitHub + branch protection + labels before big planning.
+- **New initiative:** `docs/11-new-project-workflow.md` — human + agent joint discovery; modular packages emerge—human approves boundaries, agent implements. Run `/new-initiative` in chat; see `docs/12-workflow-automation.md`.
+
+**After each step:** [`AGENTS.md` § closure checklist](AGENTS.md#after-each-step-closure-checklist) — update package map, READMEs, workflow docs, PR `Closes #`, ADRs if needed; say what was N/A.
+
+**Milestones:** `docs/13-milestones-and-scope.md` — **Alignment** block (issue + milestone, on track / at risk); escalate on drift; do not expand scope silently.
 
 **Non-negotiables:** No secrets in code; minimal diffs; run `bun run lint` and `bun run check-types` before finishing; new deps need justification.

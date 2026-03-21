@@ -66,6 +66,8 @@ Use **`issue number`** in the branch name (e.g. `agent/42-add-door43-client`).
 
 Follow **`AGENTS.md`**, hexagonal rules, and UI philosophy. Commit with conventional messages, e.g. `feat(door43): add repo discovery (#42)`.
 
+Before you treat a **step** as done (or before you push / open the PR), run the [**closure checklist** in `AGENTS.md`](../AGENTS.md#after-each-step-closure-checklist): update package map, READMEs, workflow docs, and issue/PR metadata that the step invalidated — not only the code.
+
 ### 5. Push
 
 ```bash

@@ -1,0 +1,24 @@
+{
+  "name": "Biblia Studio",
+  "image": "oven/bun:1.3.3",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "editorconfig.editorconfig"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "typescript.tsdk": "node_modules/typescript/lib"
+      }
+    }
+  },
+  "postCreateCommand": "bun install && bunx lefthook install",
+  "forwardPorts": [3000, 3001, 6006],
+  "portsAttributes": {
+    "3000": { "label": "web" },
+    "3001": { "label": "docs" },
+    "6006": { "label": "storybook" }
+  }
+}

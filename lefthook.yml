@@ -1,0 +1,6 @@
+# https://lefthook.dev/configuration/
+# Run `bun install` (or `lefthook install`) after clone to enable hooks.
+pre-commit:
+  commands:
+    lint-staged:
+      run: bunx lint-staged

@@ -15,6 +15,10 @@ node_modules
 # Testing
 coverage
 
+# Generated docs & Storybook (regenerate with `bun run docs:api` / `bun run build-storybook` in `packages/ui`)
+docs/api
+packages/ui/storybook-static
+
 # Turbo
 .turbo
 

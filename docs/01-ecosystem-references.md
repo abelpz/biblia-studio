@@ -24,6 +24,12 @@ Use these as the **source of truth** for formats, APIs, and platform behavior. B
 - **Scripture Burrito** — alternative scripture/resource packaging; migration topics appear in collab docs.
 - **USFM / USX** — scripture markup; implementation details belong in `@biblia-studio/formats` over time.
 
+## Community translation resources — FIA
+
+**[FIA — Familiarize, Internalize, Articulate](https://fia.bible/about)** is an open-source program of **book introductions**, **glossary**, **media**, and a **six-step** passage workflow aimed especially at **oral communities** and teams preparing to translate. It complements Door43 / unfoldingWord work: it is **not** a substitute for Resource Container or DCS APIs, but it is a **reference model** for how teams ground passages before drafting (context, scenes, key terms, speaking/signing practice).
+
+When Biblia Studio features touch **FIA-shaped** study or translation prep (e.g. step order, glossary links, media), **link to [fia.bible](https://fia.bible/about)** for product meaning; implement storage and sync through our normal **ports and adapters** (Door43, files, or future backends) — same hexagonal rule as for other upstream content.
+
 ## How Biblia Studio uses this
 
 1. **Link, don’t duplicate** — Long-form spec prose stays upstream; we summarize and point here.

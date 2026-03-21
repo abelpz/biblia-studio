@@ -1,0 +1,18 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "name": "Biblia Studio — @biblia-studio/*",
+  "entryPoints": [
+    "packages/core/src/index.ts",
+    "packages/formats/src/index.ts",
+    "packages/door43/src/index.ts",
+    "packages/editing/src/index.ts",
+    "packages/translation/src/index.ts",
+    "packages/project/src/index.ts",
+    "packages/study/src/index.ts",
+    "packages/publishing/src/index.ts"
+  ],
+  "out": "docs/api",
+  "readme": "none",
+  "excludeExternals": true,
+  "skipErrorChecking": true
+}

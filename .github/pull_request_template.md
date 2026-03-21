@@ -7,6 +7,7 @@
 - [ ] Scoped change (no unrelated refactors)
 - [ ] `bun run lint` — run and passing (or explain)
 - [ ] `bun run check-types` — run and passing (or explain)
+- [ ] `bun run test` — run and passing (or explain)
 - [ ] `bun run build` — if build-affecting, run and passing (or explain)
 - [ ] No secrets / credentials / `.env` contents in diff
 - [ ] Architecture: hexagonal boundaries for `apps/*` respected ([`docs/05-hexagonal-apps.md`](../docs/05-hexagonal-apps.md))

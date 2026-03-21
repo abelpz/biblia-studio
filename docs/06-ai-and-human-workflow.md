@@ -18,6 +18,8 @@ Biblia Studio is built primarily by **AI coding agents**, with **humans** respon
 4. **Hexagonal apps** — core/use cases do not import Next.js or `fetch` directly; see [Hexagonal apps](./05-hexagonal-apps.md).
 5. **Run verification** — at minimum `bun run lint` and `bun run check-types`; `bun run build` when build-affecting paths change.
 6. **Surface uncertainty** — explicit questions for humans when requirements conflict with docs or common sense.
+7. **Close out each step** — Before pausing or moving on, run the [**closure checklist** in `AGENTS.md`](../AGENTS.md#after-each-step-closure-checklist): update package map, READMEs, workflow docs, PR/issue links, and ADRs that the step touched — not only code.
+8. **Stay aligned with milestones** — Restate issue + milestone; add an **Alignment** block (on track / at risk); **escalate** on scope drift per [Milestones & scope](./13-milestones-and-scope.md).
 
 ## What human reviewers should verify
 
@@ -28,19 +30,21 @@ Biblia Studio is built primarily by **AI coding agents**, with **humans** respon
 - [ ] **Upstream alignment** — Door43 / RC / USFM behavior matches cited specs or issues are filed for intentional divergence.
 - [ ] **Dependencies** — New packages justified; license compatible; supply-chain risk acceptable.
 - [ ] **Tests & docs** — Meaningful behavior changes include tests and/or doc updates (README, `docs/`, or package README).
+- [ ] **Milestone fit** — Issue still matches milestone / acceptance criteria; agent called out drift or **Alignment** if scope moved ([Milestones & scope](./13-milestones-and-scope.md)).
 - [ ] **Accessibility** — Interactive UI: keyboard, labels, focus; no “click-only” critical paths without reviewer sign-off.
 
 ## Repo automation & templates
 
-| Artifact                                                                      | Status                                                                                                                       |
-| ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| **CI** ([`.github/workflows/ci.yml`](../.github/workflows/ci.yml))            | **Done** — `lint`, `check-types`, `build` on PRs and `main`. See [CI & branch protection](./09-ci-and-branch-protection.md). |
-| **Issue templates** ([`.github/ISSUE_TEMPLATE/`](../.github/ISSUE_TEMPLATE/)) | **Done** — Agent task + Human decision forms.                                                                                |
-| **`CONTRIBUTING.md`** ([root](../CONTRIBUTING.md))                            | **Done** — Short contributor entry point.                                                                                    |
-| **`docs/adr/README.md`** ([ADR guide](./adr/README.md))                       | **Done** — Convention for future decision records (add `0001-…md` when needed).                                              |
-| **`CODEOWNERS`** ([`.github/CODEOWNERS`](../.github/CODEOWNERS))              | **Done** — Review routing (`@abelpz`; expand when the team grows).                                                           |
-| **`SECURITY.md`** ([root](../SECURITY.md))                                    | **Done** — Vulnerability reporting (advisory / private contact).                                                             |
-| **GitHub labels** (`agent`, `needs-triage`)                                   | **Done** on `abelpz/biblia-studio` via `gh label create`.                                                                    |
+| Artifact                                                                                                                                                              | Status                                                                                                                       |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| **CI** ([`.github/workflows/ci.yml`](../.github/workflows/ci.yml))                                                                                                    | **Done** — `lint`, `check-types`, `build` on PRs and `main`. See [CI & branch protection](./09-ci-and-branch-protection.md). |
+| **Issue templates** ([`.github/ISSUE_TEMPLATE/`](../.github/ISSUE_TEMPLATE/))                                                                                         | **Done** — Agent task + Human decision forms.                                                                                |
+| **`CONTRIBUTING.md`** ([root](../CONTRIBUTING.md))                                                                                                                    | **Done** — Short contributor entry point.                                                                                    |
+| **`docs/adr/README.md`** ([ADR guide](./adr/README.md))                                                                                                               | **Done** — Convention for future decision records (add `0001-…md` when needed).                                              |
+| **`CODEOWNERS`** ([`.github/CODEOWNERS`](../.github/CODEOWNERS))                                                                                                      | **Done** — Review routing (`@abelpz`; expand when the team grows).                                                           |
+| **`SECURITY.md`** ([root](../SECURITY.md))                                                                                                                            | **Done** — Vulnerability reporting (advisory / private contact).                                                             |
+| **GitHub labels** (`agent`, `needs-triage`)                                                                                                                           | **Done** on `abelpz/biblia-studio` via `gh label create`.                                                                    |
+| **Initiative automation** ([`initiative-automation.yml`](../.github/workflows/initiative-automation.yml), [`/new-initiative`](../.cursor/commands/new-initiative.md)) | **Done** — see [Workflow automation](./12-workflow-automation.md).                                                           |
 
 ### Optional GitHub settings
 
@@ -52,11 +56,14 @@ Biblia Studio is built primarily by **AI coding agents**, with **humans** respon
 
 ## Communication norms
 
-- Agents: end summaries with **what changed**, **commands run**, and **risks / follow-ups**.
+- Agents: end summaries with **what changed** (including **docs and config**), **commands run**, and **risks / follow-ups**. If a [closure checklist](../AGENTS.md#after-each-step-closure-checklist) row was N/A, say so briefly.
 - Humans: prefer **concrete** change requests (file + intent) over generic “make it better.”
 
 ## Related
 
 - [`AGENTS.md`](../AGENTS.md) — concise agent rules
 - [GitHub agent workflow](./08-github-agent-workflow.md) — issue-driven PR flow with GitHub MCP
+- [New project workflow](./11-new-project-workflow.md) — human + agent joint discovery; modular packages emerge
+- [Workflow automation](./12-workflow-automation.md) — `/new-initiative` + GitHub reminder workflow
+- [Milestones & scope](./13-milestones-and-scope.md) — drift signals, escalation, Alignment summaries
 - [Extending upstream docs](./03-extending-upstream-docs.md) — what we document vs link

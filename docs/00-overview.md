@@ -4,7 +4,9 @@
 
 ## Principles
 
-- **Interoperable resources** — We align with [unfoldingWord](https://www.unfoldingword.org/) and [Door43](https://door43.org/) conventions (e.g. [Resource Container](https://resource-container.readthedocs.io/), USFM scripture, translation helps) so tools can share data and workflows.
+A concise **digest** for day-to-day work (including agents) lives in [**Principles**](./PRINCIPLES.md); the bullets below expand the same themes.
+
+- **Interoperable resources** — We align with [unfoldingWord](https://www.unfoldingword.org/) and [Door43](https://door43.org/) conventions (e.g. [Resource Container](https://resource-container.readthedocs.io/), USFM scripture, translation helps) so tools can share data and workflows. Where relevant we also align with **[FIA](https://fia.bible/about)** (Familiarize, Internalize, Articulate) as a **community translation** resource model — book context, glossary, media, and a structured passage process for oral-preference teams — without conflating it with DCS or RC specs ([ecosystem references](./01-ecosystem-references.md)).
 - **Docs-first** — Implementation follows clearly versioned specs and guides. Our [ecosystem references](./01-ecosystem-references.md) point to the canonical upstream documentation; this repo adds **Biblia Studio–specific** architecture, package boundaries, and implementation notes.
 - **Small, composable packages** — Domain logic lives in scoped `@biblia-studio/*` packages. Apps (`apps/*`) compose those packages; shared UI and lint/tsconfig remain under `@repo/*` from the Turborepo starter until we choose to rename them.
 - **Layered UI** — We favor composing **lifeless** (logic/hooks), **skinless** or **headless** (accessible structure/behavior), and **boneless** (design tokens / utility styling) per [Argyle’s model](https://nerdy.dev/headless-boneless-and-skinless-ui). See [UI philosophy](./04-ui-philosophy.md).

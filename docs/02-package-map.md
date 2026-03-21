@@ -2,6 +2,8 @@
 
 Workspace packages under `@biblia-studio/*` are **intentionally bounded** by concern. They may depend on each other acyclically (e.g. higher-level tools depend on `formats` and `door43`, not the reverse).
 
+**Evolving boundaries:** When starting new work, you do not need the final package split on day one. Follow [New project / initiative workflow](./11-new-project-workflow.md) and **update this document** when responsibilities shift or new packages are promoted from apps.
+
 **Apps** (`apps/*`) compose use cases with **ports and adapters** ([hexagonal architecture](./05-hexagonal-apps.md)); `@biblia-studio/*` packages often supply **driven-side** building blocks (e.g. Door43) that adapters implement behind a port.
 
 ## Foundation
@@ -14,13 +16,13 @@ Workspace packages under `@biblia-studio/*` are **intentionally bounded** by con
 
 ## Bible-tool domains
 
-| Package                      | Folder                 | Responsibility                                                                                                                          |
-| ---------------------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| `@biblia-studio/editing`     | `packages/editing`     | Translation **editing** UX primitives: buffers, validation hooks, merge/conflict-oriented types (consumes `formats`, may use `door43`). |
-| `@biblia-studio/translation` | `packages/translation` | **Translation** workflow concepts: checks, progress, roles, handoffs — without owning full UI.                                          |
-| `@biblia-studio/project`     | `packages/project`     | **Project management**: organizations, repositories, milestones, assignments — orchestration over `door43` and metadata.                |
-| `@biblia-studio/study`       | `packages/study`       | **Study** tools: scripture + helps composition (notes, words, questions, academy links) using `formats`.                                |
-| `@biblia-studio/publishing`  | `packages/publishing`  | **Publishing** pipelines: validation packs, export targets, readiness checks.                                                           |
+| Package                      | Folder                 | Responsibility                                                                                                                                                                                                                                            |
+| ---------------------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@biblia-studio/editing`     | `packages/editing`     | Translation **editing** UX primitives: buffers, validation hooks, merge/conflict-oriented types (consumes `formats`, may use `door43`).                                                                                                                   |
+| `@biblia-studio/translation` | `packages/translation` | **Translation** workflow concepts: checks, progress, roles, handoffs — without owning full UI.                                                                                                                                                            |
+| `@biblia-studio/project`     | `packages/project`     | **Project management**: organizations, repositories, milestones, assignments — orchestration over `door43` and metadata.                                                                                                                                  |
+| `@biblia-studio/study`       | `packages/study`       | **Study** tools: scripture + helps composition (notes, words, questions, academy links) using `formats`. May compose UX aligned with **[FIA](https://fia.bible/about)** where product requires it ([ecosystem references](./01-ecosystem-references.md)). |
+| `@biblia-studio/publishing`  | `packages/publishing`  | **Publishing** pipelines: validation packs, export targets, readiness checks.                                                                                                                                                                             |
 
 ## Shared Turborepo utilities (starter)
 

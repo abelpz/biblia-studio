@@ -1,0 +1,142 @@
+# Checklist reminders for docs/11-new-project-workflow.md (human + agent, emergent packages).
+# Idempotent: one bot comment per issue/PR (HTML marker).
+
+name: Initiative workflow automation
+
+on:
+  issues:
+    types: [opened, labeled]
+  pull_request:
+    types: [opened, reopened]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  agent-issue-checklist:
+    name: Agent issue — workflow checklist
+    runs-on: ubuntu-latest
+    if: github.event_name == 'issues'
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const marker = '<!-- biblia-studio:initiative-bot:issue:v1 -->';
+            const payload = context.payload;
+            const issue = payload.issue;
+            const labels = (issue.labels || []).map((l) => l.name);
+            const title = issue.title || '';
+
+            if (payload.action === 'labeled' && payload.label?.name !== 'agent') {
+              core.info('Not the agent label; skipping.');
+              return;
+            }
+            if (payload.action === 'opened') {
+              const ok = labels.includes('agent') || title.startsWith('[agent]');
+              if (!ok) {
+                core.info('Not an agent-tracked issue; skipping.');
+                return;
+              }
+            }
+
+            const issue_number = issue.number;
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number,
+              per_page: 100,
+            });
+            if (comments.some((c) => c.body?.includes(marker))) {
+              core.info('Checklist already posted; skipping.');
+              return;
+            }
+
+            const repo = `${context.repo.owner}/${context.repo.repo}`;
+            const body = [
+              marker,
+              '### Initiative workflow (automation)',
+              '',
+              'This issue looks like **agent-tracked** work. Use the **human + agent** flow in [`docs/11-new-project-workflow.md`](https://github.com/' +
+                repo +
+                '/blob/main/docs/11-new-project-workflow.md):',
+              '',
+              '1. **Align** — Goal, MVP, non-goals, risks (human leads).',
+              '2. **Discover** — Boundaries and first vertical slice (joint); package split **emerges**—see [`docs/02-package-map.md`](https://github.com/' +
+                repo +
+                '/blob/main/docs/02-package-map.md).',
+              '3. **Ship** — Branch `agent/' +
+                issue_number +
+                '-…`, draft PR, `Closes #' +
+                issue_number +
+                '`, green CI.',
+              '4. **Consolidate** — Update package map / ADR when seams stabilize.',
+              '',
+              '**In Cursor:** type `/new-initiative` in chat to load the checklist command.',
+              '',
+              '---',
+              '*Posted by [`initiative-automation.yml`](https://github.com/' +
+                repo +
+                '/blob/main/.github/workflows/initiative-automation.yml)*',
+            ].join('\n');
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number,
+              body,
+            });
+
+  pr-issue-link-reminder:
+    name: PR — link to issue reminder
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const marker = '<!-- biblia-studio:initiative-bot:pr:v1 -->';
+            const pr = context.payload.pull_request;
+            const body = pr.body || '';
+
+            if (/\b(closes|fixes|resolves)\s+#\d+/i.test(body)) {
+              core.info('PR already links an issue; skipping.');
+              return;
+            }
+
+            const issue_number = pr.number;
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number,
+              per_page: 100,
+            });
+            if (comments.some((c) => c.body?.includes(marker))) {
+              core.info('Reminder already posted; skipping.');
+              return;
+            }
+
+            const repo = `${context.repo.owner}/${context.repo.repo}`;
+            const text = [
+              marker,
+              '### Link to an issue',
+              '',
+              'Add `Closes #NN` or `Fixes #NN` in the PR description when this PR completes tracked work ([GitHub agent workflow](https://github.com/' +
+                repo +
+                '/blob/main/docs/08-github-agent-workflow.md)).',
+              '',
+              'If this PR is intentionally standalone, ignore this reminder.',
+              '',
+              '---',
+              '*Posted by [`initiative-automation.yml`](https://github.com/' +
+                repo +
+                '/blob/main/.github/workflows/initiative-automation.yml)*',
+            ].join('\n');
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number,
+              body: text,
+            });
