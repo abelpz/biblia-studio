@@ -4,4 +4,5 @@
  */
 export { BIBLIA_STUDIO } from "@biblia-studio/core";
 
-export const DOOR43_HOST_DEFAULT = "git.door43.org" as const;
+export { DOOR43_HOST_DEFAULT } from "./constants.js";
+export { fetchDoor43Version, type Door43VersionResponse } from "./version.js";
