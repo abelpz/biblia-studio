@@ -16,6 +16,13 @@ updates:
         dependency-type: development
         patterns:
           - "*"
+    # eslint-plugin-react does not support ESLint 10 yet (RuleContext / getFilename).
+    # Drop this ignore when the React + typescript-eslint stack supports ESLint 10.
+    ignore:
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@eslint/js"
+        update-types: ["version-update:semver-major"]
 
   # Action pins in workflows (checkout, setup-bun, codeql-action, …)
   - package-ecosystem: github-actions
