@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "verbatimModuleSyntax": false,
+    "baseUrl": ".",
+    "paths": {
+      "@biblia-studio/core": ["packages/core/src/index.ts"],
+      "@biblia-studio/door43": ["packages/door43/src/index.ts"],
+      "@biblia-studio/formats": ["packages/formats/src/index.ts"],
+      "@biblia-studio/editing": ["packages/editing/src/index.ts"],
+      "@biblia-studio/translation": ["packages/translation/src/index.ts"],
+      "@biblia-studio/project": ["packages/project/src/index.ts"],
+      "@biblia-studio/study": ["packages/study/src/index.ts"],
+      "@biblia-studio/publishing": ["packages/publishing/src/index.ts"]
+    }
+  },
+  "include": ["packages/*/src/**/*.ts"],
+  "exclude": ["node_modules", "**/*.test.ts"]
+}

@@ -59,16 +59,16 @@ Read [`docs/10-first-project.md`](./docs/10-first-project.md) before planning th
 
 ## DX tooling (in repo)
 
-| Tool                           | Notes                                                                                                            |
-| ------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
-| **Vitest**                     | `bun run test` (via Turborepo); per-package `vitest.config.ts` in `packages/*`                                   |
-| **Lefthook** + **lint-staged** | Pre-commit: Prettier on staged files; `bun install` runs `lefthook install`                                      |
-| **Dependabot**                 | [`.github/dependabot.yml`](./.github/dependabot.yml) — weekly Bun deps, grouped devDependencies                  |
-| **TypeDoc**                    | `bun run docs:api` → `docs/api/` (gitignored; uses `skipErrorChecking` until workspace path aliases are unified) |
-| **Storybook**                  | `packages/ui`: `bun run storybook` / `bun run build-storybook`; output `storybook-static/` (gitignored)          |
-| **CodeQL**                     | [`.github/workflows/codeql.yml`](./.github/workflows/codeql.yml)                                                 |
-| **Devcontainer**               | [`.devcontainer/devcontainer.json`](./.devcontainer/devcontainer.json) — Bun image                               |
-| **GitHub bootstrap**           | [`docs/14-github-bootstrap.md`](./docs/14-github-bootstrap.md) — labels, MCP token, branch protection notes      |
+| Tool                           | Notes                                                                                                                                         |
+| ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Vitest**                     | `bun run test` (via Turborepo); per-package `vitest.config.ts` in `packages/*`                                                                |
+| **Lefthook** + **lint-staged** | Pre-commit: Prettier on staged files; `bun install` runs `lefthook install`                                                                   |
+| **Dependabot**                 | [`.github/dependabot.yml`](./.github/dependabot.yml) — weekly Bun deps, grouped devDependencies                                               |
+| **TypeDoc**                    | `bun run docs:api` → `docs/api/` (gitignored); uses [`tsconfig.typedoc.json`](./tsconfig.typedoc.json) for `@biblia-studio/*` path resolution |
+| **Storybook**                  | `packages/ui`: `bun run storybook` / `bun run build-storybook`; output `storybook-static/` (gitignored)                                       |
+| **CodeQL**                     | [`.github/workflows/codeql.yml`](./.github/workflows/codeql.yml)                                                                              |
+| **Devcontainer**               | [`.devcontainer/devcontainer.json`](./.devcontainer/devcontainer.json) — Bun image                                                            |
+| **GitHub bootstrap**           | [`docs/14-github-bootstrap.md`](./docs/14-github-bootstrap.md) — labels, MCP token, branch protection notes                                   |
 
 ## Architecture notes
 

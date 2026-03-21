@@ -20,7 +20,8 @@ CI only **reports** status; **branch protection** enforces it. A maintainer shou
 1. Repo **Settings** → **Branches** → **Add rule** for `main`
 2. Enable **Require a pull request before merging**
 3. Enable **Require status checks to pass before merging** → select the **CI** workflow job (name may appear as **checks** or **CI / checks** after the first run)
-4. Optionally: **Require branches to be up to date before merging**, **Do not allow bypassing** (as appropriate for your team)
+4. After **CodeQL** has run at least once, optionally add **Analyze (TypeScript)** (workflow **CodeQL**) as a second required check — confirm the exact label under **Actions** → latest run → job name.
+5. Optionally: **Require branches to be up to date before merging**, **Do not allow bypassing** (as appropriate for your team)
 
 Until this is enabled, merges can still proceed without a green CI if someone has rights.
 
