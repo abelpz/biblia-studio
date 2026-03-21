@@ -36,6 +36,9 @@ export default function Home() {
             Get started by editing <code>apps/web/app/page.tsx</code>
           </li>
           <li>Save and see your changes instantly.</li>
+          <li>
+            <a href="/door43">Door43 — public repo search (M1)</a>
+          </li>
         </ol>
 
         <div className={styles.ctas}>

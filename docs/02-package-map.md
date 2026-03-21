@@ -6,6 +6,8 @@ Workspace packages under `@biblia-studio/*` are **intentionally bounded** by con
 
 **Apps** (`apps/*`) compose use cases with **ports and adapters** ([hexagonal architecture](./05-hexagonal-apps.md)); `@biblia-studio/*` packages often supply **driven-side** building blocks (e.g. Door43) that adapters implement behind a port.
 
+**`apps/web`** — `src/ports` holds driven **port** types (e.g. public Door43 repo search); `src/adapters/driven` implements them by calling `@biblia-studio/door43`. Route modules under `app/` stay thin and call those adapters.
+
 ## Foundation
 
 | Package                  | Folder             | Responsibility                                                                                                                                                                                                                                  |

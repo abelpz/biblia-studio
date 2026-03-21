@@ -12,4 +12,12 @@ import { fetchDoor43Version } from "@biblia-studio/door43";
 const { version } = await fetchDoor43Version();
 ```
 
-Auth, tokens, and private resources are out of scope for this slice; see Swagger for endpoints that require login.
+**`GET /api/v1/repos/search`** — public repository search (no auth). Use `searchDoor43Repos({ query?, limit?, host? })`; the default query constant is `DOOR43_REPO_SEARCH_DEFAULT_QUERY`.
+
+```ts
+import { searchDoor43Repos } from "@biblia-studio/door43";
+
+const repos = await searchDoor43Repos({ query: "unfoldingWord", limit: 10 });
+```
+
+Auth, tokens, and private resources are out of scope for these slices; see Swagger for endpoints that require login.
