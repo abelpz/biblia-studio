@@ -75,6 +75,14 @@ Agents should end with **recommended** option(s) and **one sentence each** for t
 - **Step closure** — Still run [AGENTS.md § closure checklist](../AGENTS.md#after-each-step-closure-checklist) for docs and delivery.
 - **GitHub workflow** — Issues and PRs stay the system of record — [GitHub agent workflow](./08-github-agent-workflow.md).
 
+## Active milestone (this repo)
+
+| Milestone                        | GitHub                                                              | Tracking issue (example)                               |
+| -------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------ |
+| **M1 — Door43 read-only in web** | [Milestone #1](https://github.com/abelpz/biblia-studio/milestone/1) | [#8](https://github.com/abelpz/biblia-studio/issues/8) |
+
+Update this table when milestones close or new ones start.
+
 ## Related
 
 - [AGENTS.md](../AGENTS.md) — closure checklist, when to stop
