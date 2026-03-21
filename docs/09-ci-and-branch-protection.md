@@ -13,6 +13,28 @@ On every **push** to `main` and every **pull request** targeting `main`, GitHub 
 
 PRs should stay green before merge. Agents must run the same commands locally when possible ([`AGENTS.md`](../AGENTS.md)).
 
+## Dependabot
+
+**Config:** [`.github/dependabot.yml`](../.github/dependabot.yml)
+
+| Update type        | Schedule | Notes                                                                                            |
+| ------------------ | -------- | ------------------------------------------------------------------------------------------------ |
+| **Bun** (`/`)      | Weekly   | Groups **development** dependencies; uses root `bun.lock`                                        |
+| **GitHub Actions** | Weekly   | Groups Action version bumps (`actions/checkout`, `oven-sh/setup-bun`, `github/codeql-action`, …) |
+
+GitHub opens PRs automatically; merge after CI is green. If a grouped bump fails, split or pin versions in a follow-up PR.
+
+**Enablement:** Version updates run from the committed config; ensure **Settings → Code security and analysis → Dependabot** shows version updates enabled (default on public repos).
+
+## CodeQL
+
+**Workflow:** [`.github/workflows/codeql.yml`](../.github/workflows/codeql.yml)  
+**Analysis config:** [`.github/codeql/codeql-config.yml`](../.github/codeql/codeql-config.yml) (paths under `apps/` and `packages/`, ignores build artifacts)
+
+Runs on **push** / **pull_request** to `main` and **weekly** schedule. Uses **Bun** + `bun install` + `bun run build` before analysis so extraction matches the monorepo (same idea as CI).
+
+**Enablement:** For **private** repos, [GitHub Advanced Security / Code scanning](https://docs.github.com/en/code-security/code-scanning) may be required depending on your plan. **Security** tab → **Code scanning** should show results after the first successful workflow.
+
 ## Branch protection (manual setup on GitHub)
 
 CI only **reports** status; **branch protection** enforces it. A maintainer should configure:

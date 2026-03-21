@@ -61,9 +61,24 @@ Fully quit and reopen Cursor so it picks up the env var and reloads MCP.
 
 ## 4. Verify
 
-1. **Settings → Tools & Integrations → MCP** (or **Features → Model Context Protocol**): the **github** server should show a **green** / healthy status.
-2. In Agent chat, check **Available Tools** for GitHub-related tools.
+1. **Settings → Tools & Integrations → MCP** (or **Features → Model Context Protocol**): the **github** server should show a **green** / healthy status **and** a **non-zero tool count** (e.g. “N tools enabled”).
+2. In Agent chat, check **Available Tools** for GitHub-related tools (e.g. `get_me`, `list_issues`).
 3. Optional prompt: “List repositories I can access under abelpz/biblia-studio.”
+
+### Troubleshooting: **“No tools, prompts, or resources”** (enabled but empty)
+
+This usually means Cursor never received a valid capability list from the remote server—most often **auth** or **env**—not that you forgot to click something.
+
+| Check                                  | What to do                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`GITHUB_MCP_PAT` visible to Cursor** | The variable must exist in the environment **when Cursor starts**. On Windows, set a **User** env var and **fully quit** Cursor (all windows), then reopen—or launch Cursor from a shell where you’ve `set`/`export` the variable for that session. If the header interpolates to an empty string, the server may connect but expose **no tools**.                                                                          |
+| **Token not expired / not revoked**    | Regenerate on GitHub if unsure; update the env var; restart Cursor.                                                                                                                                                                                                                                                                                                                                                         |
+| **Scopes too narrow**                  | Fine-grained: at least **Metadata** read + **Contents** + **Issues** + **Pull requests** for normal agent flows (widen if you still see 403 in **Output → MCP** logs). Classic: typically **`repo`** for private repos. Under-scoped tokens can fail server-side discovery. See [github-mcp-server#1663](https://github.com/github/github-mcp-server/issues/1663) (discussion: PAT scopes fixed “no tools” for some users). |
+| **Use PAT in config, not OAuth-only**  | The hosted server expects **`Authorization: Bearer <PAT>`** in [`.cursor/mcp.json`](../.cursor/mcp.json). Relying on OAuth flows without a PAT can fail with auth/DCR errors in MCP logs ([same issue thread](https://github.com/github/github-mcp-server/issues/1663)).                                                                                                                                                    |
+| **Cursor version**                     | Use a **recent Cursor** build (remote MCP uses Streamable HTTP); update if MCP logs show transport errors.                                                                                                                                                                                                                                                                                                                  |
+| **Logs**                               | **View → Output** → choose **MCP** (or the GitHub server log channel). Look for **401**, **403**, “No server info”, or empty bearer—redact tokens before sharing.                                                                                                                                                                                                                                                           |
+
+After fixing, you should see **many tools** (on the order of dozens), similar to other enabled MCP extensions—not “0 tools”.
 
 ## Alternative: local server (Docker)
 

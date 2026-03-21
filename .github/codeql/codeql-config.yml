@@ -1,0 +1,10 @@
+# https://docs.github.com/en/code-security/code-scanning/creating-an-advanced-setup-for-code-scanning/customizing-your-advanced-setup-for-code-scanning
+name: "biblia-studio"
+paths:
+  - apps
+  - packages
+paths-ignore:
+  - "**/node_modules/**"
+  - "**/.next/**"
+  - "**/dist/**"
+  - "**/storybook-static/**"
