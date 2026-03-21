@@ -38,6 +38,7 @@
       "name": "web",
       "version": "0.1.0",
       "dependencies": {
+        "@biblia-studio/door43": "*",
         "@repo/ui": "*",
         "next": "16.2.1",
         "react": "^19.2.0",
