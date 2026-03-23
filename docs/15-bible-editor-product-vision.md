@@ -2,6 +2,10 @@
 
 **Audience:** humans prioritizing roadmap; agents anchoring **why** before **how**. This is **direction**, not a delivery contract — milestones and issues still define scope.
 
+## One product among several
+
+This monorepo will ship **more than one** end-user product (multiple `apps/*` and possibly other shells). Shared work lives in **`@biblia-studio/*`** packages so each product can reuse formats, Door43 integration, editing primitives, and UI layers without duplicating domain rules. **This document** describes only the **Bible translation editor** product line — not the whole roadmap. Add separate vision or initiative docs for other products when they firm up ([new project workflow](./11-new-project-workflow.md)).
+
 ## One-sentence goal
 
 A **simple Bible translation editor** that works **offline and online**, on **multiple platforms**, with the **working copy as a local Git repository** that **syncs to DCS** ([Door43](https://door43.org/) / [Gitea API](https://git.door43.org/api/swagger)), and that can **grow** toward collaboration, merge/review workflows, and **reuse** of the same editor in other apps (e.g. opened from a project-management task).

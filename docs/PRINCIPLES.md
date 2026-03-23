@@ -4,11 +4,12 @@
 
 ## Product & ecosystem
 
-| Principle                         | Detail                                                                                                                                                                                                        |
-| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Interoperable scripture stack** | Align with Door43 / unfoldingWord resources and APIs; cite upstream, don’t fork spec prose. Treat **[FIA](https://fia.bible/about)** as a complementary **translation/study** reference (not an RC/DCS spec). |
-| **Docs-first**                    | Behavior should trace to `docs/` or [uW-Tools-Collab](https://github.com/unfoldingWord/uW-Tools-Collab) — see [ecosystem references](./01-ecosystem-references.md).                                           |
-| **Data & scripture integrity**    | No silent loss or mis-association of verse/content; call out edge cases in PRs.                                                                                                                               |
+| Principle                         | Detail                                                                                                                                                                                                                         |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Multi-product monorepo**        | **Several** end-user products can live under `apps/*`; they **share** `@biblia-studio/*` packages. Product-specific vision docs (e.g. [Bible editor vision](./15-bible-editor-product-vision.md)) describe one line at a time. |
+| **Interoperable scripture stack** | Align with Door43 / unfoldingWord resources and APIs; cite upstream, don’t fork spec prose. Treat **[FIA](https://fia.bible/about)** as a complementary **translation/study** reference (not an RC/DCS spec).                  |
+| **Docs-first**                    | Behavior should trace to `docs/` or [uW-Tools-Collab](https://github.com/unfoldingWord/uW-Tools-Collab) — see [ecosystem references](./01-ecosystem-references.md).                                                            |
+| **Data & scripture integrity**    | No silent loss or mis-association of verse/content; call out edge cases in PRs.                                                                                                                                                |
 
 ## Structure & code placement
 

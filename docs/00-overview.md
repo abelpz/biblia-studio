@@ -4,7 +4,7 @@
 
 ## Product direction
 
-The **north-star** product is a **Bible translation editor**: offline-capable, online-syncing, multiplatform, **Git-backed locally**, syncing to **DCS (Door43)**, with room to grow into collaboration, merge/review, comments, and a **reusable editor** opened from other apps (e.g. project tasks). See [**Bible editor — product vision**](./15-bible-editor-product-vision.md).
+We intend to build **multiple products** in this monorepo (several apps and tools over time), sharing **`@biblia-studio/*`** libraries. One major line is a **Bible translation editor**: offline-capable, online-syncing, multiplatform, **Git-backed locally**, syncing to **DCS (Door43)**, growing toward collaboration, merge/review, comments, and a **reusable editor** opened from other apps (e.g. project tasks). That line is documented in [**Bible editor — product vision**](./15-bible-editor-product-vision.md). Further product visions can live alongside it under `docs/` as initiatives take shape.
 
 ## Principles
 

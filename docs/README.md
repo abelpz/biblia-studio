@@ -22,4 +22,4 @@ Start here, then read in order:
 | [Workflow automation](./12-workflow-automation.md)                 | `/new-initiative` + GitHub bot reminders                                                                                             |
 | [Milestones & scope](./13-milestones-and-scope.md)                 | Roadmap milestones, **Alignment** summaries, drift signals, escalation (desist / new issue / new milestone)                          |
 | [GitHub bootstrap](./14-github-bootstrap.md)                       | Labels, branch protection notes, MCP / env template                                                                                  |
-| [Bible editor product vision](./15-bible-editor-product-vision.md) | North star: offline/online editor, Git + DCS, collaboration phases, reusable editor                                                  |
+| [Bible editor product vision](./15-bible-editor-product-vision.md) | One product line among several: offline/online editor, Git + DCS, collaboration phases, reusable editor                              |

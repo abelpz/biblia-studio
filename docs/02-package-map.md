@@ -1,6 +1,6 @@
 # Package map
 
-Workspace packages under `@biblia-studio/*` are **intentionally bounded** by concern. They may depend on each other acyclically (e.g. higher-level tools depend on `formats` and `door43`, not the reverse).
+Workspace packages under `@biblia-studio/*` are **intentionally bounded** by concern. They may depend on each other acyclically (e.g. higher-level tools depend on `formats` and `door43`, not the reverse). **Multiple** `apps/*` products are expected to **reuse** the same packages so we do not fork domain logic per app.
 
 **Evolving boundaries:** When starting new work, you do not need the final package split on day one. Follow [New project / initiative workflow](./11-new-project-workflow.md) and **update this document** when responsibilities shift or new packages are promoted from apps.
 
