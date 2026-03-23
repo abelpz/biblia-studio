@@ -77,15 +77,16 @@ Agents should end with **recommended** option(s) and **one sentence each** for t
 
 ## Milestones (this repo)
 
-| Milestone                        | Status | Delivered                                                                                                              |
-| -------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------------------- |
-| **M1 — Door43 read-only in web** | Closed | [PR #9](https://github.com/abelpz/biblia-studio/pull/9) — issue [#8](https://github.com/abelpz/biblia-studio/issues/8) |
+| Milestone                              | Status | Delivered / tracking                                                                                                                                                                                                                       |
+| -------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **M1 — Door43 read-only in web**       | Closed | [PR #9](https://github.com/abelpz/biblia-studio/pull/9) — issue [#8](https://github.com/abelpz/biblia-studio/issues/8)                                                                                                                     |
+| **M2 — WYSIWYG USFM v1 (ProseMirror)** | Open   | [#10](https://github.com/abelpz/biblia-studio/issues/10) M2a → [#11](https://github.com/abelpz/biblia-studio/issues/11) M2b → [#12](https://github.com/abelpz/biblia-studio/issues/12) M2c — [vision](./15-bible-editor-product-vision.md) |
 
 Update this table when new milestones start.
 
 ## Active milestone
 
-_None — add the next milestone in GitHub when you plan the next slice._
+**[M2 — WYSIWYG USFM v1 (ProseMirror)](https://github.com/abelpz/biblia-studio/milestone/2)** — agent issues [#10](https://github.com/abelpz/biblia-studio/issues/10) (formats), [#11](https://github.com/abelpz/biblia-studio/issues/11) (editing), [#12](https://github.com/abelpz/biblia-studio/issues/12) (web). Implement in order **M2a → M2b → M2c** (parallelize only after upstream merges).
 
 ## Related
 

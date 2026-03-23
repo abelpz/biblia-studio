@@ -39,6 +39,9 @@ export default function Home() {
           <li>
             <a href="/door43">Door43 — public repo search (M1)</a>
           </li>
+          <li>
+            <a href="/editor">Scripture editor — USFM WYSIWYG (M2)</a>
+          </li>
         </ol>
 
         <div className={styles.ctas}>

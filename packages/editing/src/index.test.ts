@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { EDITING_SCOPE } from "./index";
+import { EDITING_SCOPE } from "./index.js";
 
 describe("@biblia-studio/editing", () => {
   it("exports package scope", () => {

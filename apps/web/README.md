@@ -1,6 +1,8 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/create-next-app).
 
-`dev` / `build` use **`--webpack`** so the workspace package `@biblia-studio/door43` (NodeNext-style `.js` imports to `.ts` sources) resolves correctly. See `next.config.js` (`transpilePackages`, `resolve.extensionAlias`).
+`dev` / `build` use **`--webpack`** so workspace packages (`@biblia-studio/door43`, `@biblia-studio/editing`, `@biblia-studio/formats`) with NodeNext-style `.js` imports to `.ts` sources resolve correctly. See `next.config.js` (`transpilePackages`, `resolve.extensionAlias`).
+
+- **`/editor`** — minimal ProseMirror scripture editor (USFM via `formats` + `editing`).
 
 ## Getting Started
 

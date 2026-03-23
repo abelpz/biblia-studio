@@ -1,7 +1,15 @@
 /**
- * Translation editing — buffers, validation, and merge-oriented primitives.
+ * Translation editing — ProseMirror scripture model, buffers, validation hooks.
  */
-export * as door43 from "@biblia-studio/door43";
-export * as formats from "@biblia-studio/formats";
-
-export const EDITING_SCOPE = "@biblia-studio/editing" as const;
+export { EDITING_SCOPE } from "./scope.js";
+export {
+  pmDocToUsfmDocument,
+  scriptureSchema,
+  usfmDocumentToPmDoc,
+} from "./scripture/index.js";
+export type {
+  UsfmChapter,
+  UsfmDocument,
+  UsfmParagraph,
+  UsfmVerse,
+} from "@biblia-studio/formats";

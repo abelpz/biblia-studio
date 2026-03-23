@@ -10,17 +10,17 @@ Workspace packages under `@biblia-studio/*` are **intentionally bounded** by con
 
 ## Foundation
 
-| Package                  | Folder             | Responsibility                                                                                                                                                                                                                                  |
-| ------------------------ | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `@biblia-studio/core`    | `packages/core`    | Shared types, constants, and cross-cutting helpers that are not format- or API-specific.                                                                                                                                                        |
-| `@biblia-studio/formats` | `packages/formats` | Scripture and resource **formats**: USFM/USX boundaries, Resource Container metadata, alignment with [collab format guides](https://github.com/unfoldingWord/uW-Tools-Collab/tree/main/docs).                                                   |
-| `@biblia-studio/door43`  | `packages/door43`  | **Door43 integration**: HTTP client shapes, auth/session assumptions, repository discovery — guided by the [Door43 API developer material](https://github.com/unfoldingWord/uW-Tools-Collab) and [Swagger](https://git.door43.org/api/swagger). |
+| Package                  | Folder             | Responsibility                                                                                                                                                                                                                                                                                         |
+| ------------------------ | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `@biblia-studio/core`    | `packages/core`    | Shared types, constants, and cross-cutting helpers that are not format- or API-specific.                                                                                                                                                                                                               |
+| `@biblia-studio/formats` | `packages/formats` | Scripture and resource **formats**: **USFM v1** parse/serialize (`parseUsfm` / `serializeUsfm`, minimal marker allowlist in package README), USFM/USX boundaries, Resource Container metadata, alignment with [collab format guides](https://github.com/unfoldingWord/uW-Tools-Collab/tree/main/docs). |
+| `@biblia-studio/door43`  | `packages/door43`  | **Door43 integration**: HTTP client shapes, auth/session assumptions, repository discovery — guided by the [Door43 API developer material](https://github.com/unfoldingWord/uW-Tools-Collab) and [Swagger](https://git.door43.org/api/swagger).                                                        |
 
 ## Bible-tool domains
 
 | Package                      | Folder                 | Responsibility                                                                                                                                                                                                                                            |
 | ---------------------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `@biblia-studio/editing`     | `packages/editing`     | Translation **editing** UX primitives: buffers, validation hooks, merge/conflict-oriented types (consumes `formats`, may use `door43`).                                                                                                                   |
+| `@biblia-studio/editing`     | `packages/editing`     | Translation **editing**: ProseMirror scripture schema (`scriptureSchema`) and USFM ↔ PM bridge (`usfmDocumentToPmDoc`, `pmDocToUsfmDocument`); consumes `formats` only.                                                                                   |
 | `@biblia-studio/translation` | `packages/translation` | **Translation** workflow concepts: checks, progress, roles, handoffs — without owning full UI.                                                                                                                                                            |
 | `@biblia-studio/project`     | `packages/project`     | **Project management**: organizations, repositories, milestones, assignments — orchestration over `door43` and metadata.                                                                                                                                  |
 | `@biblia-studio/study`       | `packages/study`       | **Study** tools: scripture + helps composition (notes, words, questions, academy links) using `formats`. May compose UX aligned with **[FIA](https://fia.bible/about)** where product requires it ([ecosystem references](./01-ecosystem-references.md)). |
@@ -50,7 +50,6 @@ flowchart TB
   formats --> core
   door43 --> core
   editing --> formats
-  editing --> door43
   translation --> formats
   translation --> door43
   project --> door43
