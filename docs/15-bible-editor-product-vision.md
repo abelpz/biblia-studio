@@ -19,11 +19,23 @@ A **simple Bible translation editor** that works **offline and online**, on **mu
 | **Local = Git repo** | Scripture and project files live in a **normal Git working tree** so translators can use standard Git concepts and tools where helpful.                                                                                                     |
 | **Sync to DCS**      | Remote is **Door43 Content Service** semantics: authenticate, push/pull against `git.door43.org` (or compatible) per [uW-Tools-Collab](https://github.com/unfoldingWord/uW-Tools-Collab) and [Swagger](https://git.door43.org/api/swagger). |
 
+## Editor: WYSIWYG, ProseMirror, minimal USFM
+
+| Decision                                    | Intent                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **WYSIWYG**                                 | Translators work in a **visual, structured** view (chapters, verses, paragraphs, inline styles) — **not** raw backslash markup as the primary surface. Raw USFM may exist as an advanced view or export only.                                                                                                                                                                                                                                                                                      |
+| **[ProseMirror](https://prosemirror.net/)** | Use **ProseMirror** (schema + document model + `prosemirror-view`) as the editor engine: battle-tested for structured text, extensible plugins, and a clear path to **comments** / **annotations** later. Keep the PM-specific logic in **`@biblia-studio/editing`** (or a subpath) as it stabilizes; apps supply **skin** and **shell** ([UI philosophy](./04-ui-philosophy.md)).                                                                                                                 |
+| **Minimal USFM marker set**                 | Support only a **small, explicit allowlist** of USFM markers at first — enough for basic scripture drafting (e.g. identification headers, chapter `\c`, verse `\v`, paragraph `\p`, and a short list of **character** / **list** markers as needed). Everything else is **out of scope** until we add it with fixtures, round-trip tests, and alignment with [collab / USFM references](./01-ecosystem-references.md). **Expand the set deliberately**; do not pretend to support full USFM in v1. |
+
+**Round-trip:** The ProseMirror document is the **canonical editing state**; **serialize** to USFM for save and Git, **parse** USFM to open existing files. Parsing and validation belong in **`@biblia-studio/formats`** (or shared helpers) so the same rules apply in CI and in the editor.
+
+**Dependency:** Adding ProseMirror (or related packages) requires a **one-line justification** in the PR per [`AGENTS.md`](../AGENTS.md); no extra runtime deps without a reason.
+
 ## Phased capabilities (rough order)
 
 | Phase                         | Capability                                                                                                                                                      | Notes                                                                                                                                      |
 | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| **1 — Editor + file reality** | Edit **USFM** (or agreed slice) in a project; save to disk/repo; basic navigation                                                                               | Align with `@biblia-studio/formats`; keep UI **lifeless → skinless** per [UI philosophy](./04-ui-philosophy.md).                           |
+| **1 — Editor + file reality** | **WYSIWYG** USFM via **ProseMirror**; **minimal marker** allowlist; round-trip with `@biblia-studio/formats`; save to disk/repo; basic navigation               | No raw-USFM-first UX; expand markers only with tests. See **Editor** section above.                                                        |
 | **2 — Sync**                  | Push/pull with DCS; conflict surfacing at least at **file** level                                                                                               | Likely **ADR**: auth model, offline queue, conflict policy.                                                                                |
 | **3 — Collaboration (later)** | Multiple contributors; **merge** work from another book/USFM file with **UI to choose** incoming hunks or passages                                              | May overlap with Git merge + custom diff UI; spec with care for scripture boundaries.                                                      |
 | **4 — Review & comments**     | Structured **review** of content and **comments** (anchored to passages or files)                                                                               | Storage model (in-repo vs server) → **ADR** if not plain Git notes.                                                                        |
@@ -37,7 +49,7 @@ A **simple Bible translation editor** that works **offline and online**, on **mu
 
 ## When to write an ADR
 
-Add an [ADR](./adr/README.md) when locking **auth**, **sync semantics**, **conflict/merge strategy**, or **where comments/reviews live** — not for every UI tweak.
+Add an [ADR](./adr/README.md) when locking **auth**, **sync semantics**, **conflict/merge strategy**, **where comments/reviews live**, or a **stable USFM marker contract** (if multiple apps must agree) — not for every UI tweak.
 
 ## Related
 
