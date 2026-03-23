@@ -4,6 +4,12 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 - **`/editor`** — minimal ProseMirror scripture editor (USFM via `formats` + `editing`).
 
+## Smoke check (local)
+
+1. From repo root: `bunx turbo run dev --filter=web` (or `cd apps/web && bun run dev`).
+2. Open [http://localhost:3000/editor](http://localhost:3000/editor) — you should see the editor, USFM preview, and **Download USFM**.
+3. CI-equivalent: `bun run turbo run build --filter=web` (compiles `/editor`).
+
 ## Getting Started
 
 First, run the development server:
