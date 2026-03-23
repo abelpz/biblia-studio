@@ -2,6 +2,10 @@
 
 **Biblia Studio** is a [Bun](https://bun.sh/) + [Turborepo](https://turborepo.dev/) monorepo for **libraries and tools** used to build Bible software: **editing**, **translation**, **project management**, **study**, and **publishing**.
 
+## Product direction
+
+The **north-star** product is a **Bible translation editor**: offline-capable, online-syncing, multiplatform, **Git-backed locally**, syncing to **DCS (Door43)**, with room to grow into collaboration, merge/review, comments, and a **reusable editor** opened from other apps (e.g. project tasks). See [**Bible editor — product vision**](./15-bible-editor-product-vision.md).
+
 ## Principles
 
 A concise **digest** for day-to-day work (including agents) lives in [**Principles**](./PRINCIPLES.md); the bullets below expand the same themes.

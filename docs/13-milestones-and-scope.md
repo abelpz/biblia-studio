@@ -89,6 +89,7 @@ _None — add the next milestone in GitHub when you plan the next slice._
 
 ## Related
 
+- [Bible editor product vision](./15-bible-editor-product-vision.md) — long-term product direction when naming milestones
 - [AGENTS.md](../AGENTS.md) — closure checklist, when to stop
 - [New project workflow](./11-new-project-workflow.md) — initiatives and emerging packages
 - [AI & human workflow](./06-ai-and-human-workflow.md) — roles and communication norms

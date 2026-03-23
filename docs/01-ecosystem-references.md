@@ -12,7 +12,7 @@ Use these as the **source of truth** for formats, APIs, and platform behavior. B
 
 ## API reference
 
-- **[Door43 / Gitea API (Swagger)](https://git.door43.org/api/swagger)** — Live API reference for `git.door43.org` (discover repos, content, auth patterns as documented upstream).
+- **[Door43 / Gitea API (Swagger)](https://git.door43.org/api/swagger)** — Live API reference for `git.door43.org` (discover repos, content, auth patterns as documented upstream). **DCS (Door43 Content Service)** in practice is this Git-backed hosting and API surface translators sync with; product vision: [`15-bible-editor-product-vision.md`](./15-bible-editor-product-vision.md).
 
 ## AI and automation
 
