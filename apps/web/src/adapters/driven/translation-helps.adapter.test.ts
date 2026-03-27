@@ -7,15 +7,20 @@ vi.mock("@biblia-studio/door43", () => ({
 
 vi.mock("@biblia-studio/translation", () => ({
   compareGlToGlTcReadyTranslationHelps: vi.fn(),
+  findTargetCatalogEntriesClaimingSource: vi.fn(),
 }));
 
 import { listTcReadyTranslationHelpsResources } from "@biblia-studio/door43";
-import { compareGlToGlTcReadyTranslationHelps } from "@biblia-studio/translation";
+import {
+  compareGlToGlTcReadyTranslationHelps,
+  findTargetCatalogEntriesClaimingSource,
+} from "@biblia-studio/translation";
 
 describe("createTranslationHelpsAdapter", () => {
   beforeEach(() => {
     vi.mocked(listTcReadyTranslationHelpsResources).mockReset();
     vi.mocked(compareGlToGlTcReadyTranslationHelps).mockReset();
+    vi.mocked(findTargetCatalogEntriesClaimingSource).mockReset();
   });
 
   it("listTcReadyCatalog forwards language and default limit, maps rows", async () => {
@@ -80,5 +85,50 @@ describe("createTranslationHelpsAdapter", () => {
     expect(out.matched).toHaveLength(1);
     expect(out.matched[0]?.sourceTitle).toBe("EN");
     expect(out.matched[0]?.targetTitle).toBe("ES");
+  });
+
+  it("findTargetsClaimingSource forwards args and maps slim rows", async () => {
+    vi.mocked(findTargetCatalogEntriesClaimingSource).mockResolvedValue([
+      {
+        summary: {
+          identifier: "tn",
+          subject: "S",
+          title: "ES notes",
+          version: "2",
+          description: undefined,
+          bundleUrl: undefined,
+          catalogOwner: "u",
+          catalogRepo: "es_tn",
+          catalogRef: "main",
+        },
+        metadata: {} as never,
+        matchedSources: [{ identifier: "tn", language: "en", version: "1" }],
+      },
+    ]);
+    const adapter = createTranslationHelpsAdapter();
+    const out = await adapter.findTargetsClaimingSource({
+      targetLanguage: "es",
+      sourceLanguage: "en",
+      sourceIdentifier: "tn",
+      sourceVersion: "1",
+      organization: "uw",
+      limit: 100,
+    });
+    expect(out).toHaveLength(1);
+    expect(out[0]).toMatchObject({
+      identifier: "tn",
+      title: "ES notes",
+      matchedSources: [{ language: "en", identifier: "tn", version: "1" }],
+    });
+    expect(findTargetCatalogEntriesClaimingSource).toHaveBeenCalledWith(
+      expect.objectContaining({
+        targetLanguage: "es",
+        sourceLanguage: "en",
+        sourceIdentifier: "tn",
+        sourceVersion: "1",
+        organization: "uw",
+        limit: 100,
+      }),
+    );
   });
 });

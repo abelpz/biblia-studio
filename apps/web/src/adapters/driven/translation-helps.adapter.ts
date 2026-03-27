@@ -1,7 +1,11 @@
 import { listTcReadyTranslationHelpsResources } from "@biblia-studio/door43";
-import { compareGlToGlTcReadyTranslationHelps } from "@biblia-studio/translation";
+import {
+  compareGlToGlTcReadyTranslationHelps,
+  findTargetCatalogEntriesClaimingSource,
+} from "@biblia-studio/translation";
 import type {
   GlToGlCompareSummary,
+  SourceFirstClaimRow,
   TranslationHelpsPort,
   TcReadyHelpCatalogRow,
 } from "../../ports/translation-helps.port";
@@ -68,6 +72,39 @@ export function createTranslationHelpsAdapter(): TranslationHelpsPort {
         })),
       };
       return summary;
+    },
+
+    async findTargetsClaimingSource({
+      targetLanguage,
+      sourceLanguage,
+      sourceIdentifier,
+      sourceVersion,
+      organization,
+      limit,
+    }) {
+      const hits = await findTargetCatalogEntriesClaimingSource({
+        targetLanguage,
+        sourceLanguage,
+        sourceIdentifier,
+        sourceVersion,
+        organization,
+        limit: limit ?? 500,
+      });
+      return hits.map(
+        (h): SourceFirstClaimRow => ({
+          identifier: h.summary.identifier,
+          subject: h.summary.subject,
+          title: h.summary.title,
+          version: h.summary.version,
+          catalogOwner: h.summary.catalogOwner,
+          catalogRepo: h.summary.catalogRepo,
+          matchedSources: h.matchedSources.map((s) => ({
+            identifier: s.identifier,
+            language: s.language,
+            version: s.version,
+          })),
+        }),
+      );
     },
   };
 }
