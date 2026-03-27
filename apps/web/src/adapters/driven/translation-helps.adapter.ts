@@ -1,4 +1,7 @@
-import { listTcReadyTranslationHelpsResources } from "@biblia-studio/door43";
+import {
+  buildCatalogMetadataUrl,
+  listTcReadyTranslationHelpsResources,
+} from "@biblia-studio/door43";
 import {
   compareGlToGlTcReadyTranslationHelps,
   findTargetCatalogEntriesClaimingSource,
@@ -10,6 +13,20 @@ import type {
   TcReadyHelpCatalogRow,
 } from "../../ports/translation-helps.port";
 
+function door43Urls(
+  owner: string | undefined,
+  repo: string | undefined,
+  ref: string | undefined,
+): { repoUrl?: string; metadataUrl?: string } {
+  if (!owner || !repo || !ref || ref.length === 0) {
+    return {};
+  }
+  return {
+    repoUrl: `https://git.door43.org/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`,
+    metadataUrl: buildCatalogMetadataUrl({ owner, repo, ref }),
+  };
+}
+
 function mapCatalogRow(r: {
   identifier: string;
   subject: string;
@@ -17,7 +34,13 @@ function mapCatalogRow(r: {
   version: string;
   catalogOwner?: string;
   catalogRepo?: string;
+  catalogRef?: string;
 }): TcReadyHelpCatalogRow {
+  const catalogRef =
+    r.catalogRef && r.catalogRef.length > 0 ? r.catalogRef : undefined;
+  const refForMeta =
+    catalogRef ?? (r.version.length > 0 ? r.version : undefined);
+  const links = door43Urls(r.catalogOwner, r.catalogRepo, refForMeta);
   return {
     identifier: r.identifier,
     subject: r.subject,
@@ -25,6 +48,9 @@ function mapCatalogRow(r: {
     version: r.version,
     catalogOwner: r.catalogOwner,
     catalogRepo: r.catalogRepo,
+    catalogRef,
+    door43RepoUrl: links.repoUrl,
+    door43MetadataUrl: links.metadataUrl,
   };
 }
 
@@ -54,22 +80,80 @@ export function createTranslationHelpsAdapter(): TranslationHelpsPort {
       const summary: GlToGlCompareSummary = {
         sourceLanguage: result.sourceLanguage,
         targetLanguage: result.targetLanguage,
-        matched: result.matched.map((m) => ({
-          subject: m.key.subject,
-          identifier: m.key.identifier,
-          sourceTitle: m.source.title,
-          targetTitle: m.target.title,
-        })),
-        missingInTarget: result.missingInTarget.map((m) => ({
-          subject: m.key.subject,
-          identifier: m.key.identifier,
-          sourceTitle: m.source.title,
-        })),
-        onlyInTarget: result.onlyInTarget.map((m) => ({
-          subject: m.key.subject,
-          identifier: m.key.identifier,
-          targetTitle: m.target.title,
-        })),
+        matched: result.matched.map((m) => {
+          const sRef =
+            m.source.catalogRef && m.source.catalogRef.length > 0
+              ? m.source.catalogRef
+              : m.source.version.length > 0
+                ? m.source.version
+                : undefined;
+          const tRef =
+            m.target.catalogRef && m.target.catalogRef.length > 0
+              ? m.target.catalogRef
+              : m.target.version.length > 0
+                ? m.target.version
+                : undefined;
+          const sLinks = door43Urls(
+            m.source.catalogOwner,
+            m.source.catalogRepo,
+            sRef,
+          );
+          const tLinks = door43Urls(
+            m.target.catalogOwner,
+            m.target.catalogRepo,
+            tRef,
+          );
+          return {
+            subject: m.key.subject,
+            identifier: m.key.identifier,
+            sourceTitle: m.source.title,
+            targetTitle: m.target.title,
+            sourceDoor43RepoUrl: sLinks.repoUrl,
+            sourceDoor43MetadataUrl: sLinks.metadataUrl,
+            targetDoor43RepoUrl: tLinks.repoUrl,
+            targetDoor43MetadataUrl: tLinks.metadataUrl,
+          };
+        }),
+        missingInTarget: result.missingInTarget.map((m) => {
+          const sRef =
+            m.source.catalogRef && m.source.catalogRef.length > 0
+              ? m.source.catalogRef
+              : m.source.version.length > 0
+                ? m.source.version
+                : undefined;
+          const sLinks = door43Urls(
+            m.source.catalogOwner,
+            m.source.catalogRepo,
+            sRef,
+          );
+          return {
+            subject: m.key.subject,
+            identifier: m.key.identifier,
+            sourceTitle: m.source.title,
+            sourceDoor43RepoUrl: sLinks.repoUrl,
+            sourceDoor43MetadataUrl: sLinks.metadataUrl,
+          };
+        }),
+        onlyInTarget: result.onlyInTarget.map((m) => {
+          const tRef =
+            m.target.catalogRef && m.target.catalogRef.length > 0
+              ? m.target.catalogRef
+              : m.target.version.length > 0
+                ? m.target.version
+                : undefined;
+          const tLinks = door43Urls(
+            m.target.catalogOwner,
+            m.target.catalogRepo,
+            tRef,
+          );
+          return {
+            subject: m.key.subject,
+            identifier: m.key.identifier,
+            targetTitle: m.target.title,
+            targetDoor43RepoUrl: tLinks.repoUrl,
+            targetDoor43MetadataUrl: tLinks.metadataUrl,
+          };
+        }),
       };
       return summary;
     },
@@ -90,21 +174,38 @@ export function createTranslationHelpsAdapter(): TranslationHelpsPort {
         organization,
         limit: limit ?? 500,
       });
-      return hits.map(
-        (h): SourceFirstClaimRow => ({
+      return hits.map((h): SourceFirstClaimRow => {
+        const catalogRef =
+          h.summary.catalogRef && h.summary.catalogRef.length > 0
+            ? h.summary.catalogRef
+            : h.summary.version.length > 0
+              ? h.summary.version
+              : undefined;
+        const links = door43Urls(
+          h.summary.catalogOwner,
+          h.summary.catalogRepo,
+          catalogRef,
+        );
+        return {
           identifier: h.summary.identifier,
           subject: h.summary.subject,
           title: h.summary.title,
           version: h.summary.version,
           catalogOwner: h.summary.catalogOwner,
           catalogRepo: h.summary.catalogRepo,
+          catalogRef:
+            h.summary.catalogRef && h.summary.catalogRef.length > 0
+              ? h.summary.catalogRef
+              : undefined,
+          door43RepoUrl: links.repoUrl,
+          door43MetadataUrl: links.metadataUrl,
           matchedSources: h.matchedSources.map((s) => ({
             identifier: s.identifier,
             language: s.language,
             version: s.version,
           })),
-        }),
-      );
+        };
+      });
     },
   };
 }

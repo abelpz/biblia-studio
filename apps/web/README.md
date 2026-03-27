@@ -3,7 +3,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 `dev` / `build` use **`--webpack`** so workspace packages (`@biblia-studio/door43`, `@biblia-studio/editing`, `@biblia-studio/formats`) with NodeNext-style `.js` imports to `.ts` sources resolve correctly. See `next.config.js` (`transpilePackages`, `resolve.extensionAlias`).
 
 - **`/editor`** — minimal ProseMirror scripture editor (USFM via `formats` + `editing`).
-- **`/translation-helps`** — tc-ready Translation Helps catalog (`lang`, optional `org`, `limit`); GL→GL via `compare`; **source-first** via `srcLang` + `srcId` (optional `srcVer`) on the same page. Port + adapter use `door43` / `translation`.
+- **`/translation-helps`** — tc-ready Translation Helps catalog (`lang`, optional `org`, `limit`); GL→GL via `compare`; **source-first** via `srcLang` + `srcId` (optional `srcVer`). Rows with catalog **owner/repo** include **repo** (Gitea) and **metadata** (catalog JSON API) links. Port + adapter use `door43` / `translation`.
 
 ## Smoke check (local)
 

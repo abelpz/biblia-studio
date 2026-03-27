@@ -25,6 +25,37 @@ function parseLimit(raw: string | undefined): number | undefined {
     : undefined;
 }
 
+const extLink = {
+  target: "_blank",
+  rel: "noopener noreferrer",
+} as const;
+
+function Door43Links({
+  repoUrl,
+  metadataUrl,
+}: {
+  repoUrl?: string;
+  metadataUrl?: string;
+}) {
+  if (!repoUrl && !metadataUrl) {
+    return <span style={{ color: "#888" }}>—</span>;
+  }
+  return (
+    <span style={{ display: "inline-flex", gap: "0.45rem", flexWrap: "wrap" }}>
+      {repoUrl ? (
+        <a href={repoUrl} {...extLink} style={{ whiteSpace: "nowrap" }}>
+          repo
+        </a>
+      ) : null}
+      {metadataUrl ? (
+        <a href={metadataUrl} {...extLink} style={{ whiteSpace: "nowrap" }}>
+          metadata
+        </a>
+      ) : null}
+    </span>
+  );
+}
+
 export default async function TranslationHelpsPage({
   searchParams,
 }: {
@@ -236,7 +267,7 @@ async function CatalogSection({
               <th style={{ padding: "0.35rem 0.5rem" }}>Subject</th>
               <th style={{ padding: "0.35rem 0.5rem" }}>Title</th>
               <th style={{ padding: "0.35rem 0.5rem" }}>Version</th>
-              <th style={{ padding: "0.35rem 0.5rem" }}>Repo</th>
+              <th style={{ padding: "0.35rem 0.5rem" }}>Door43</th>
             </tr>
           </thead>
           <tbody>
@@ -255,8 +286,20 @@ async function CatalogSection({
                 <td style={{ padding: "0.35rem 0.5rem" }}>{r.version}</td>
                 <td style={{ padding: "0.35rem 0.5rem", fontSize: "0.82rem" }}>
                   {r.catalogOwner && r.catalogRepo ? (
-                    <span>
-                      {r.catalogOwner}/{r.catalogRepo}
+                    <span
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "0.2rem",
+                      }}
+                    >
+                      <span style={{ fontFamily: "monospace" }}>
+                        {r.catalogOwner}/{r.catalogRepo}
+                      </span>
+                      <Door43Links
+                        repoUrl={r.door43RepoUrl}
+                        metadataUrl={r.door43MetadataUrl}
+                      />
                     </span>
                   ) : (
                     "—"
@@ -326,7 +369,7 @@ async function SourceFirstSection({
               <th style={{ padding: "0.35rem 0.5rem" }}>Title</th>
               <th style={{ padding: "0.35rem 0.5rem" }}>Version</th>
               <th style={{ padding: "0.35rem 0.5rem" }}>Matched source</th>
-              <th style={{ padding: "0.35rem 0.5rem" }}>Repo</th>
+              <th style={{ padding: "0.35rem 0.5rem" }}>Door43</th>
             </tr>
           </thead>
           <tbody>
@@ -350,8 +393,20 @@ async function SourceFirstSection({
                 </td>
                 <td style={{ padding: "0.35rem 0.5rem", fontSize: "0.82rem" }}>
                   {r.catalogOwner && r.catalogRepo ? (
-                    <span>
-                      {r.catalogOwner}/{r.catalogRepo}
+                    <span
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "0.2rem",
+                      }}
+                    >
+                      <span style={{ fontFamily: "monospace" }}>
+                        {r.catalogOwner}/{r.catalogRepo}
+                      </span>
+                      <Door43Links
+                        repoUrl={r.door43RepoUrl}
+                        metadataUrl={r.door43MetadataUrl}
+                      />
                     </span>
                   ) : (
                     "—"
@@ -406,13 +461,32 @@ async function CompareSection({
             {summary.matched.map((m) => (
               <li
                 key={`m-${m.subject}-${m.identifier}`}
-                style={{ marginBottom: "0.25rem" }}
+                style={{ marginBottom: "0.35rem" }}
               >
                 <strong>{m.identifier}</strong> — {m.sourceTitle} /{" "}
                 {m.targetTitle}
                 <span style={{ color: "#666", fontSize: "0.85em" }}>
                   {" "}
                   · {m.subject}
+                </span>
+                <span
+                  style={{
+                    display: "block",
+                    marginTop: "0.15rem",
+                    fontSize: "0.82em",
+                  }}
+                >
+                  <span style={{ color: "#555" }}>Source: </span>
+                  <Door43Links
+                    repoUrl={m.sourceDoor43RepoUrl}
+                    metadataUrl={m.sourceDoor43MetadataUrl}
+                  />
+                  <span style={{ color: "#888", margin: "0 0.35rem" }}>·</span>
+                  <span style={{ color: "#555" }}>Target: </span>
+                  <Door43Links
+                    repoUrl={m.targetDoor43RepoUrl}
+                    metadataUrl={m.targetDoor43MetadataUrl}
+                  />
                 </span>
               </li>
             ))}
@@ -429,9 +503,21 @@ async function CompareSection({
             {summary.missingInTarget.map((m) => (
               <li
                 key={`miss-${m.subject}-${m.identifier}`}
-                style={{ marginBottom: "0.25rem" }}
+                style={{ marginBottom: "0.35rem" }}
               >
                 <strong>{m.identifier}</strong> — {m.sourceTitle}
+                <span
+                  style={{
+                    display: "block",
+                    marginTop: "0.15rem",
+                    fontSize: "0.82em",
+                  }}
+                >
+                  <Door43Links
+                    repoUrl={m.sourceDoor43RepoUrl}
+                    metadataUrl={m.sourceDoor43MetadataUrl}
+                  />
+                </span>
               </li>
             ))}
           </ul>
@@ -447,9 +533,21 @@ async function CompareSection({
             {summary.onlyInTarget.map((m) => (
               <li
                 key={`only-${m.subject}-${m.identifier}`}
-                style={{ marginBottom: "0.25rem" }}
+                style={{ marginBottom: "0.35rem" }}
               >
                 <strong>{m.identifier}</strong> — {m.targetTitle}
+                <span
+                  style={{
+                    display: "block",
+                    marginTop: "0.15rem",
+                    fontSize: "0.82em",
+                  }}
+                >
+                  <Door43Links
+                    repoUrl={m.targetDoor43RepoUrl}
+                    metadataUrl={m.targetDoor43MetadataUrl}
+                  />
+                </span>
               </li>
             ))}
           </ul>
