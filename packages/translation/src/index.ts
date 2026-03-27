@@ -20,3 +20,10 @@ export {
   type FindTargetCatalogEntriesClaimingSourceOptions,
   type TargetCatalogEntryClaimingSource,
 } from "./translation-helps-source-first.js";
+export {
+  compareGlToGlTcReadyBookProjects,
+  type CompareGlToGlTcReadyBookProjectsOptions,
+  type GlToGlTcReadyBookProjectsResult,
+  type MatchedTcReadyBookProjectCoverage,
+  type SkippedTcReadyBookProjectRow,
+} from "./translation-helps-book-matrix-gl.js";

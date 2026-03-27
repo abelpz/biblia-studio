@@ -20,6 +20,22 @@ for (const m of result.missingInTarget) {
 }
 ```
 
+## Book matrix (metadata `projects`, v0)
+
+For each **matched** GL→GL tc-ready resource, fetch **catalog metadata** for **source** and **target** and diff **`manifest.projects`** book identifiers (`projects[].identifier`):
+
+```ts
+import { compareGlToGlTcReadyBookProjects } from "@biblia-studio/translation";
+
+const matrix = await compareGlToGlTcReadyBookProjects({
+  sourceLanguage: "en",
+  targetLanguage: "es",
+  matchedMetadataLimit: 15,
+});
+```
+
+This does **not** inspect ingredient files (TSV rows, etc.); it is **manifest book lists** only. See [Translation Helps & resources](../../docs/17-translation-helps-and-resources.md).
+
 ## Source-first pairing (metadata `source`)
 
 After listing target **`tc-ready`** rows (with **`owner` / `name` / ref** on each entry), resolve which targets **claim** a given source resource via **`dublin_core.source`** (`identifier` + `language`, optional version):

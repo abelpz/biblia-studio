@@ -11,6 +11,10 @@ type Search = {
   org?: string;
   compare?: string;
   limit?: string;
+  /** With GL→GL **compare**, set **`1`** to load catalog metadata and diff **`projects`** book ids per matched resource. */
+  matrix?: string;
+  /** Max matched pairs for the book matrix (each pair = 2 metadata requests; 1–40, default 15). */
+  matrixMax?: string;
   /** Target scan uses **`lang`**. When set with **`srcId`**, rows whose metadata **`dublin_core.source`** matches **`srcLang` + `srcId`** (optional **`srcVer`**) are listed. */
   srcLang?: string;
   srcId?: string;
@@ -23,6 +27,13 @@ function parseLimit(raw: string | undefined): number | undefined {
   return Number.isFinite(n) && n > 0
     ? Math.min(Math.floor(n), 2000)
     : undefined;
+}
+
+function parseMatrixMatchedLimit(raw: string | undefined): number {
+  if (raw === undefined || raw === "") return 15;
+  const n = Number(raw);
+  if (!Number.isFinite(n) || n < 1) return 15;
+  return Math.min(40, Math.floor(n));
 }
 
 const extLink = {
@@ -94,7 +105,9 @@ export default async function TranslationHelpsPage({
         <code>subject</code> + <code>identifier</code> only.{" "}
         <strong>Source-first</strong> filters targets whose metadata claims a
         source lineage via <code>srcLang</code>, <code>srcId</code>, optional{" "}
-        <code>srcVer</code> (see form below).
+        <code>srcVer</code> (see form below). With GL→GL compare, optional{" "}
+        <strong>Book matrix</strong> diffs <code>manifest.projects</code> book
+        ids from catalog metadata per matched resource (metadata-heavy).
       </p>
 
       <form
@@ -142,6 +155,42 @@ export default async function TranslationHelpsPage({
             defaultValue={compareLang ?? ""}
             placeholder="es"
             style={{ width: "6rem", padding: "0.35rem" }}
+          />
+        </label>
+        <label
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.25rem",
+            maxWidth: "9rem",
+          }}
+        >
+          <span style={{ fontSize: "0.75rem", color: "#555" }}>
+            Book matrix
+          </span>
+          <span
+            style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}
+          >
+            <input
+              type="checkbox"
+              name="matrix"
+              value="1"
+              defaultChecked={sp.matrix === "1"}
+            />
+            <span style={{ fontSize: "0.7rem", color: "#666" }}>
+              metadata books
+            </span>
+          </span>
+        </label>
+        <label
+          style={{ display: "flex", flexDirection: "column", gap: "0.2rem" }}
+        >
+          <span style={{ fontSize: "0.75rem", color: "#555" }}>Matrix max</span>
+          <input
+            name="matrixMax"
+            defaultValue={sp.matrixMax ?? "15"}
+            title="Max matched catalog pairs (1–40)"
+            style={{ width: "4.5rem", padding: "0.35rem" }}
           />
         </label>
         <label
@@ -199,13 +248,25 @@ export default async function TranslationHelpsPage({
       </form>
 
       {compareLang && compareLang !== lang ? (
-        <CompareSection
-          port={port}
-          sourceLanguage={lang}
-          targetLanguage={compareLang}
-          organization={org}
-          limit={limit}
-        />
+        <>
+          <CompareSection
+            port={port}
+            sourceLanguage={lang}
+            targetLanguage={compareLang}
+            organization={org}
+            limit={limit}
+          />
+          {sp.matrix === "1" ? (
+            <BookMatrixSection
+              port={port}
+              sourceLanguage={lang}
+              targetLanguage={compareLang}
+              organization={org}
+              limit={limit}
+              matrixMatchedLimit={parseMatrixMatchedLimit(sp.matrixMax)}
+            />
+          ) : null}
+        </>
       ) : sourceFirstMode && srcLang && srcId ? (
         <SourceFirstSection
           port={port}
@@ -424,6 +485,136 @@ async function SourceFirstSection({
                   ) : (
                     "—"
                   )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
+}
+
+async function BookMatrixSection({
+  port,
+  sourceLanguage,
+  targetLanguage,
+  organization,
+  limit,
+  matrixMatchedLimit,
+}: {
+  port: TranslationHelpsPort;
+  sourceLanguage: string;
+  targetLanguage: string;
+  organization?: string;
+  limit?: number;
+  matrixMatchedLimit: number;
+}) {
+  const book = await port.compareTcReadyGlToGlBookMatrix({
+    sourceLanguage,
+    targetLanguage,
+    organization,
+    limit,
+    matrixMatchedLimit,
+  });
+
+  return (
+    <>
+      <h2
+        style={{
+          fontSize: "1.05rem",
+          marginTop: "1.75rem",
+          marginBottom: "0.5rem",
+        }}
+      >
+        Book matrix — manifest <code>projects</code> ({book.sourceLanguage}↔
+        {book.targetLanguage})
+      </h2>
+      <p
+        style={{ marginBottom: "0.75rem", fontSize: "0.88rem", color: "#444" }}
+      >
+        Per <strong>matched</strong> tc-ready resource, book ids from catalog
+        metadata (RC manifest). Cap: <strong>{matrixMatchedLimit}</strong> pairs
+        · loaded <strong>{book.rows.length}</strong> · skipped{" "}
+        <strong>{book.skipped.length}</strong>.
+      </p>
+      {book.skipped.length > 0 ? (
+        <ul
+          style={{
+            fontSize: "0.82rem",
+            color: "#555",
+            marginBottom: "1rem",
+            paddingLeft: "1.2rem",
+          }}
+        >
+          {book.skipped.map((s) => (
+            <li key={`skip-${s.subject}-${s.identifier}`}>
+              <code>{s.identifier}</code> — {s.reason.replace(/_/g, " ")}
+            </li>
+          ))}
+        </ul>
+      ) : null}
+      <div style={{ overflowX: "auto" }}>
+        <table
+          style={{
+            borderCollapse: "collapse",
+            width: "100%",
+            fontSize: "0.82rem",
+          }}
+        >
+          <thead>
+            <tr style={{ borderBottom: "1px solid #ccc", textAlign: "left" }}>
+              <th style={{ padding: "0.35rem 0.45rem" }}>ID</th>
+              <th style={{ padding: "0.35rem 0.45rem" }}>Both</th>
+              <th style={{ padding: "0.35rem 0.45rem" }}>Source only</th>
+              <th style={{ padding: "0.35rem 0.45rem" }}>Target only</th>
+            </tr>
+          </thead>
+          <tbody>
+            {book.rows.map((r) => (
+              <tr
+                key={`bm-${r.subject}-${r.identifier}`}
+                style={{ borderBottom: "1px solid #eee" }}
+              >
+                <td
+                  style={{
+                    padding: "0.35rem 0.45rem",
+                    fontFamily: "monospace",
+                    verticalAlign: "top",
+                  }}
+                >
+                  {r.identifier}
+                  <span
+                    style={{
+                      display: "block",
+                      color: "#666",
+                      fontSize: "0.85em",
+                      marginTop: "0.15rem",
+                    }}
+                  >
+                    {r.sourceTitle} / {r.targetTitle}
+                  </span>
+                </td>
+                <td
+                  style={{ padding: "0.35rem 0.45rem", verticalAlign: "top" }}
+                >
+                  {r.bookIdsInBoth.length > 0
+                    ? r.bookIdsInBoth.join(", ")
+                    : "—"}
+                </td>
+                <td
+                  style={{ padding: "0.35rem 0.45rem", verticalAlign: "top" }}
+                >
+                  {r.bookIdsOnlyInSource.length > 0
+                    ? r.bookIdsOnlyInSource.join(", ")
+                    : "—"}
+                </td>
+                <td
+                  style={{ padding: "0.35rem 0.45rem", verticalAlign: "top" }}
+                >
+                  {r.bookIdsOnlyInTarget.length > 0
+                    ? r.bookIdsOnlyInTarget.join(", ")
+                    : "—"}
                 </td>
               </tr>
             ))}
