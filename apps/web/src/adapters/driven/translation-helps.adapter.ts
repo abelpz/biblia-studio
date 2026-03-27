@@ -3,10 +3,12 @@ import {
   listTcReadyTranslationHelpsResources,
 } from "@biblia-studio/door43";
 import {
+  compareGlToGlTcReadyBookProjects,
   compareGlToGlTcReadyTranslationHelps,
   findTargetCatalogEntriesClaimingSource,
 } from "@biblia-studio/translation";
 import type {
+  GlToGlBookMatrixSummary,
   GlToGlCompareSummary,
   SourceFirstClaimRow,
   TranslationHelpsPort,
@@ -163,6 +165,41 @@ export function createTranslationHelpsAdapter(): TranslationHelpsPort {
             targetDoor43MetadataUrl: tLinks.metadataUrl,
           };
         }),
+      };
+      return summary;
+    },
+
+    async compareTcReadyGlToGlBookMatrix({
+      sourceLanguage,
+      targetLanguage,
+      organization,
+      limit,
+      matrixMatchedLimit,
+    }) {
+      const result = await compareGlToGlTcReadyBookProjects({
+        sourceLanguage,
+        targetLanguage,
+        organization,
+        limit,
+        matchedMetadataLimit: matrixMatchedLimit,
+      });
+      const summary: GlToGlBookMatrixSummary = {
+        sourceLanguage: result.sourceLanguage,
+        targetLanguage: result.targetLanguage,
+        rows: result.matched.map((m) => ({
+          subject: m.key.subject,
+          identifier: m.key.identifier,
+          sourceTitle: m.sourceTitle,
+          targetTitle: m.targetTitle,
+          bookIdsInBoth: m.bookIdsInBoth,
+          bookIdsOnlyInSource: m.bookIdsOnlyInSource,
+          bookIdsOnlyInTarget: m.bookIdsOnlyInTarget,
+        })),
+        skipped: result.skipped.map((s) => ({
+          subject: s.key.subject,
+          identifier: s.key.identifier,
+          reason: s.reason,
+        })),
       };
       return summary;
     },

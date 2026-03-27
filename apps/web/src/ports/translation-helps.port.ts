@@ -57,6 +57,30 @@ export type GlToGlCompareSummary = {
   onlyInTarget: GlToGlOnlyTargetRow[];
 };
 
+/** Book ids from catalog **metadata** `projects` for a matched GL→GL help resource. */
+export type GlToGlBookMatrixRow = {
+  subject: string;
+  identifier: string;
+  sourceTitle: string;
+  targetTitle: string;
+  bookIdsInBoth: string[];
+  bookIdsOnlyInSource: string[];
+  bookIdsOnlyInTarget: string[];
+};
+
+export type GlToGlBookMatrixSkipped = {
+  subject: string;
+  identifier: string;
+  reason: "no_catalog_coords" | "metadata_fetch_failed";
+};
+
+export type GlToGlBookMatrixSummary = {
+  sourceLanguage: string;
+  targetLanguage: string;
+  rows: GlToGlBookMatrixRow[];
+  skipped: GlToGlBookMatrixSkipped[];
+};
+
 /** Target catalog row whose metadata **`dublin_core.source`** claims the requested lineage. */
 export type SourceFirstClaimRow = {
   identifier: string;
@@ -89,6 +113,19 @@ export interface TranslationHelpsPort {
     organization?: string;
     limit?: number;
   }): Promise<GlToGlCompareSummary>;
+
+  /**
+   * For **matched** GL→GL tc-ready rows, fetch catalog metadata and diff **`projects`** book identifiers
+   * (see **`compareGlToGlTcReadyBookProjects`** in `@biblia-studio/translation`).
+   */
+  compareTcReadyGlToGlBookMatrix(args: {
+    sourceLanguage: string;
+    targetLanguage: string;
+    organization?: string;
+    limit?: number;
+    /** Cap on matched pairs to scan (each uses two metadata requests). */
+    matrixMatchedLimit?: number;
+  }): Promise<GlToGlBookMatrixSummary>;
 
   /** Scan tc-ready rows for **`targetLanguage`** and keep those whose metadata **`source`** matches **`sourceLanguage` + `sourceIdentifier`**. */
   findTargetsClaimingSource(args: {

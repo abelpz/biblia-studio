@@ -57,7 +57,7 @@ This is **WIP progress**, not only “released vs absent”: the user sees **par
 
 **Implementation note:** Door43 is **Git-backed**; branch vs tag reads are **adapter** concerns ([hexagonal apps](./05-hexagonal-apps.md)). Catalog **search** alone does not expose branch-level ingredient diffs—**manifest + file inventory** at **two refs** does.
 
-**Not shipped yet:** Biblia Studio has **catalog-only** prototypes; book × help matrices and **tag vs `master` diffs** are **documented intent** for `@biblia-studio/translation` + `@biblia-studio/door43` (+ `formats` for parsing when needed).
+**Shipped (v0):** Catalog GL→GL, source-first scan, Door43 links, and **manifest book-id matrix** for matched resources (`compareGlToGlTcReadyBookProjects` + `/translation-helps?matrix=1`). **Not shipped yet:** per-ingredient / verse-level matrix, interlink-derived checklists, and **tag vs `master` diffs** — see `@biblia-studio/translation` + `@biblia-studio/door43` (+ `formats` when parsing is required).
 
 ## User journey (GL→GL): two phases in time
 
@@ -107,6 +107,8 @@ Cross-links: [source-first pairing](#source-first-pairing-recommended-catalog-is
 **Catalog layer (`@biblia-studio/door43`):** `listTcReadyTranslationHelpsResources()` calls **`GET https://git.door43.org/api/v1/catalog/search`** ([`swagger.v1.json`](https://git.door43.org/swagger.v1.json)) with `topic=tc-ready` (override via options), **`lang`**, optional catalog **`owner`** (`organization`), and optional **`subjects`** filter. Use **`DEFAULT_TC_READY_HELP_SUBJECTS`** or your own list. See [`packages/door43` README](../packages/door43/README.md).
 
 **GL→GL prototype (`@biblia-studio/translation`):** `compareGlToGlTcReadyTranslationHelps({ sourceLanguage, targetLanguage, ... })` loads tc-ready catalog rows for **both** gateway languages and returns **`matched`**, **`missingInTarget`**, and **`onlyInTarget`**, keyed by **`subject` + `identifier`** (resource abbreviation). That is **catalog resource parity**, not verse-level or RC-ingredient parity; interlinking and “expected units” per scope follow [uW-Tools-Collab](https://github.com/unfoldingWord/uW-Tools-Collab) and future milestones. See [`packages/translation` README](../packages/translation/README.md).
+
+**Book matrix v0:** `compareGlToGlTcReadyBookProjects(...)` builds on **matched** pairs: for each, it fetches **`GET .../catalog/metadata/...`** for **source** and **target** and diffs **`projects`** book **identifiers** — a first step toward the **book × resource** matrix (manifest-level books only; not per-ingredient completeness). **`apps/web`** exposes this on **`/translation-helps`** when GL→GL compare is active and **`matrix=1`** (optional **`matrixMax`** 1–40, default 15 matched pairs).
 
 **Source-first scan:** `findTargetCatalogEntriesClaimingSource({ targetLanguage, sourceLanguage, sourceIdentifier, ... })` lists **target** tc-ready rows whose catalog **`dublin_core.source`** claims that lineage. **`apps/web`** exposes this on **`/translation-helps`** when both **`srcLang`** and **`srcId`** query params are set (**`lang`** = target catalog language; optional **`srcVer`**); **GL→GL compare** (`compare` ≠ `lang`) takes precedence over source-first vs plain catalog. For rows with **`owner` / `name`** (and ref) from catalog search, the web adapter also fills **Gitea repo**, **`GET .../catalog/metadata/...`**, and (when present) **bundle** (zip/tarball) links on the catalog, source-first, and GL→GL views.
 
