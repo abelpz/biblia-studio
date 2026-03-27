@@ -15,6 +15,8 @@ export type TcReadyHelpCatalogRow = {
   door43RepoUrl?: string;
   /** `GET /api/v1/catalog/metadata/{owner}/{repo}/{ref}` when coords + ref exist. */
   door43MetadataUrl?: string;
+  /** Catalog zip/tarball URL when the search row includes **`zipball_url`** / **`tarball_url`**. */
+  door43BundleUrl?: string;
 };
 
 export type GlToGlMatchedRow = {
@@ -24,8 +26,10 @@ export type GlToGlMatchedRow = {
   targetTitle: string;
   sourceDoor43RepoUrl?: string;
   sourceDoor43MetadataUrl?: string;
+  sourceDoor43BundleUrl?: string;
   targetDoor43RepoUrl?: string;
   targetDoor43MetadataUrl?: string;
+  targetDoor43BundleUrl?: string;
 };
 
 export type GlToGlMissingRow = {
@@ -42,6 +46,7 @@ export type GlToGlOnlyTargetRow = {
   targetTitle: string;
   targetDoor43RepoUrl?: string;
   targetDoor43MetadataUrl?: string;
+  targetDoor43BundleUrl?: string;
 };
 
 export type GlToGlCompareSummary = {
@@ -63,6 +68,7 @@ export type SourceFirstClaimRow = {
   catalogRef?: string;
   door43RepoUrl?: string;
   door43MetadataUrl?: string;
+  door43BundleUrl?: string;
   matchedSources: Array<{
     identifier: string;
     language: string;

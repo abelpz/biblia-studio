@@ -27,6 +27,10 @@ function door43Urls(
   };
 }
 
+function nonEmptyUrl(u: string | undefined): string | undefined {
+  return u !== undefined && u.length > 0 ? u : undefined;
+}
+
 function mapCatalogRow(r: {
   identifier: string;
   subject: string;
@@ -35,6 +39,7 @@ function mapCatalogRow(r: {
   catalogOwner?: string;
   catalogRepo?: string;
   catalogRef?: string;
+  bundleUrl?: string;
 }): TcReadyHelpCatalogRow {
   const catalogRef =
     r.catalogRef && r.catalogRef.length > 0 ? r.catalogRef : undefined;
@@ -51,6 +56,7 @@ function mapCatalogRow(r: {
     catalogRef,
     door43RepoUrl: links.repoUrl,
     door43MetadataUrl: links.metadataUrl,
+    door43BundleUrl: nonEmptyUrl(r.bundleUrl),
   };
 }
 
@@ -110,8 +116,10 @@ export function createTranslationHelpsAdapter(): TranslationHelpsPort {
             targetTitle: m.target.title,
             sourceDoor43RepoUrl: sLinks.repoUrl,
             sourceDoor43MetadataUrl: sLinks.metadataUrl,
+            sourceDoor43BundleUrl: nonEmptyUrl(m.source.bundleUrl),
             targetDoor43RepoUrl: tLinks.repoUrl,
             targetDoor43MetadataUrl: tLinks.metadataUrl,
+            targetDoor43BundleUrl: nonEmptyUrl(m.target.bundleUrl),
           };
         }),
         missingInTarget: result.missingInTarget.map((m) => {
@@ -132,6 +140,7 @@ export function createTranslationHelpsAdapter(): TranslationHelpsPort {
             sourceTitle: m.source.title,
             sourceDoor43RepoUrl: sLinks.repoUrl,
             sourceDoor43MetadataUrl: sLinks.metadataUrl,
+            sourceDoor43BundleUrl: nonEmptyUrl(m.source.bundleUrl),
           };
         }),
         onlyInTarget: result.onlyInTarget.map((m) => {
@@ -199,6 +208,7 @@ export function createTranslationHelpsAdapter(): TranslationHelpsPort {
               : undefined,
           door43RepoUrl: links.repoUrl,
           door43MetadataUrl: links.metadataUrl,
+          door43BundleUrl: nonEmptyUrl(h.summary.bundleUrl),
           matchedSources: h.matchedSources.map((s) => ({
             identifier: s.identifier,
             language: s.language,
