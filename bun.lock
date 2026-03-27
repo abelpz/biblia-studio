@@ -41,6 +41,7 @@
         "@biblia-studio/door43": "*",
         "@biblia-studio/editing": "workspace:*",
         "@biblia-studio/formats": "workspace:*",
+        "@biblia-studio/translation": "workspace:*",
         "@repo/ui": "*",
         "next": "16.2.1",
         "prosemirror-model": "^1.25.0",

@@ -40,6 +40,11 @@ export default function Home() {
             <a href="/door43">Door43 — public repo search (M1)</a>
           </li>
           <li>
+            <a href="/translation-helps">
+              Translation Helps — tc-ready catalog (M4)
+            </a>
+          </li>
+          <li>
             <a href="/editor">Scripture editor — USFM WYSIWYG (M2)</a>
           </li>
         </ol>

@@ -82,6 +82,7 @@ Agents should end with **recommended** option(s) and **one sentence each** for t
 | **M1 — Door43 read-only in web**                          | Closed | [PR #9](https://github.com/abelpz/biblia-studio/pull/9) — issue [#8](https://github.com/abelpz/biblia-studio/issues/8)                                                                                                                                                                                                           |
 | **M2 — WYSIWYG USFM v1 (ProseMirror)**                    | Closed | [Milestone #2](https://github.com/abelpz/biblia-studio/milestone/2) — closed issues [#10](https://github.com/abelpz/biblia-studio/issues/10)–[#12](https://github.com/abelpz/biblia-studio/issues/12) (USFM v1 in `formats`, ProseMirror bridge in `editing`, `/editor` in `web`); [vision](./15-bible-editor-product-vision.md) |
 | **M3 — Translation helps: catalog, metadata, GL pairing** | Closed | [PR #16](https://github.com/abelpz/biblia-studio/pull/16) (issue [#14](https://github.com/abelpz/biblia-studio/issues/14)), [PR #17](https://github.com/abelpz/biblia-studio/pull/17) (issue [#15](https://github.com/abelpz/biblia-studio/issues/15)); glossary [Translation Helps](./17-translation-helps-and-resources.md).   |
+| **M4 — Translation helps in web**                         | Open   | Issue [#18](https://github.com/abelpz/biblia-studio/issues/18) — **`/translation-helps`** (tc-ready list + optional GL→GL compare)                                                                                                                                                                                               |
 
 Update this table when new milestones start.
 
@@ -90,15 +91,15 @@ Update this table when new milestones start.
 | Area            | On **`main` (merged)**                                                                                                                                                                                                                                                 | Next slices (not in M3)                                                                  |
 | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
 | **Door43**      | Repo search, version, **`listTcReadyTranslationHelpsResources`**, **`fetchDoor43CatalogMetadata`**, **`parseCatalogMetadata`**, **`DOOR43_API_V1_BASE_URL`**, catalog summary **`catalogOwner`** / **`catalogRepo`** / **`catalogRef`** (see `packages/door43` README) | Pagination / `stage` tuning, richer catalog query helpers                                |
-| **Translation** | **`compareGlToGlTcReadyTranslationHelps`**, **`findTargetCatalogEntriesClaimingSource`** + tests + README                                                                                                                                                              | Book × help matrix, tag vs default-branch WIP, optional `apps/web` surface               |
+| **Translation** | **`compareGlToGlTcReadyTranslationHelps`**, **`findTargetCatalogEntriesClaimingSource`** + tests + README                                                                                                                                                              | Book × help matrix, tag vs default-branch WIP                                            |
 | **Docs**        | **`docs/17-translation-helps-and-resources.md`**, package map updates                                                                                                                                                                                                  | Planned API / ADR per [doc 17](./17-translation-helps-and-resources.md) “Open decisions” |
-| **Apps/web**    | Door43 repo list (M1), `/editor` (M2)                                                                                                                                                                                                                                  | Translation-helps inventory page (new issue when prioritized)                            |
+| **Apps/web**    | Door43 repo list (M1), `/editor` (M2); **`/translation-helps`** ([#18](https://github.com/abelpz/biblia-studio/issues/18))                                                                                                                                             | Source-first drill-down, book × help matrix UI                                           |
 
 Optional: create a GitHub **Milestone** retroactively and attach closed issues [#14](https://github.com/abelpz/biblia-studio/issues/14)–[#15](https://github.com/abelpz/biblia-studio/issues/15) for reporting.
 
 ## Active milestone
 
-_None — plan M4 (or the next slice) in GitHub when you prioritize the next outcome._
+**M4 — Translation helps in web** — [#18](https://github.com/abelpz/biblia-studio/issues/18).
 
 ## Related
 
