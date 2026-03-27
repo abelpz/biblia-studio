@@ -1,6 +1,6 @@
 # `@biblia-studio/door43`
 
-HTTP client surfaces and types for **Door43** ([Gitea](https://git.door43.org/)). Follow the [Door43 API developer guide](https://github.com/unfoldingWord/uW-Tools-Collab) and live [Swagger](https://git.door43.org/api/swagger).
+HTTP client surfaces and types for **Door43** ([Gitea](https://git.door43.org/)). Follow the [Door43 API developer guide](https://github.com/unfoldingWord/uW-Tools-Collab) and the Machine-readable spec [`swagger.v1.json`](https://git.door43.org/swagger.v1.json) (browse UI: [`/api/swagger`](https://git.door43.org/api/swagger)).
 
 ## Public API (no auth)
 
@@ -21,3 +21,35 @@ const repos = await searchDoor43Repos({ query: "unfoldingWord", limit: 10 });
 ```
 
 Auth, tokens, and private resources are out of scope for these slices; see Swagger for endpoints that require login.
+
+## Catalog search (tc-ready — translation helps discovery)
+
+**Translation Helps discovery:** many helps use repo topic **`tc-ready`**. The Gitea catalog endpoint **`GET /api/v1/catalog/search`** accepts `lang`, `topic`, `owner`, `subject`, `limit`, etc. See [`swagger.v1.json`](https://git.door43.org/swagger.v1.json) (`catalogSearch`, `CatalogEntry`).
+
+Use `listTcReadyTranslationHelpsResources()` to search with default `topic=tc-ready` for a language, then optionally restrict by **`subjects`** (exact `subject` strings). A convenience list is **`DEFAULT_TC_READY_HELP_SUBJECTS`**; you can pass your own array instead.
+
+```ts
+import {
+  DEFAULT_TC_READY_HELP_SUBJECTS,
+  DOOR43_API_V1_BASE_URL,
+  listTcReadyTranslationHelpsResources,
+} from "@biblia-studio/door43";
+
+const helpsOnly = await listTcReadyTranslationHelpsResources({
+  language: "en",
+  organization: "unfoldingWord",
+  subjects: DEFAULT_TC_READY_HELP_SUBJECTS,
+});
+
+const allTcReadyForLang = await listTcReadyTranslationHelpsResources({
+  language: "es",
+});
+```
+
+`buildCatalogUrl()` is exported if you need the raw URL (e.g. debugging). The API base is **`DOOR43_API_V1_BASE_URL`** (`https://git.door43.org/api/v1`).
+
+## Catalog metadata (`catalogGetMetadata`)
+
+**`GET /api/v1/catalog/metadata/{owner}/{repo}/{ref}`** returns processed manifest fields (`dublin_core`, `projects`). Use `fetchDoor43CatalogMetadata({ owner, repo, ref, fetch? })` or `buildCatalogMetadataUrl` for debugging. **`parseCatalogMetadata`** parses a JSON body (for tests or custom transports).
+
+Catalog search summaries from `listTcReadyTranslationHelpsResources` may include **`catalogOwner`**, **`catalogRepo`**, and **`catalogRef`** when the raw **`CatalogEntry`** has **`owner`** and **`name`** — use those with metadata to read **`dublin_core.source`** for source-first pairing (scripture and helps).

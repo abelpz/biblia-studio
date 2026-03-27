@@ -77,16 +77,28 @@ Agents should end with **recommended** option(s) and **one sentence each** for t
 
 ## Milestones (this repo)
 
-| Milestone                              | Status | Delivered / tracking                                                                                                                                                                                                                                                                                                             |
-| -------------------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **M1 — Door43 read-only in web**       | Closed | [PR #9](https://github.com/abelpz/biblia-studio/pull/9) — issue [#8](https://github.com/abelpz/biblia-studio/issues/8)                                                                                                                                                                                                           |
-| **M2 — WYSIWYG USFM v1 (ProseMirror)** | Closed | [Milestone #2](https://github.com/abelpz/biblia-studio/milestone/2) — closed issues [#10](https://github.com/abelpz/biblia-studio/issues/10)–[#12](https://github.com/abelpz/biblia-studio/issues/12) (USFM v1 in `formats`, ProseMirror bridge in `editing`, `/editor` in `web`); [vision](./15-bible-editor-product-vision.md) |
+| Milestone                                                 | Status          | Delivered / tracking                                                                                                                                                                                                                                                                                                              |
+| --------------------------------------------------------- | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **M1 — Door43 read-only in web**                          | Closed          | [PR #9](https://github.com/abelpz/biblia-studio/pull/9) — issue [#8](https://github.com/abelpz/biblia-studio/issues/8)                                                                                                                                                                                                            |
+| **M2 — WYSIWYG USFM v1 (ProseMirror)**                    | Closed          | [Milestone #2](https://github.com/abelpz/biblia-studio/milestone/2) — closed issues [#10](https://github.com/abelpz/biblia-studio/issues/10)–[#12](https://github.com/abelpz/biblia-studio/issues/12) (USFM v1 in `formats`, ProseMirror bridge in `editing`, `/editor` in `web`); [vision](./15-bible-editor-product-vision.md)  |
+| **M3 — Translation helps: catalog, metadata, GL pairing** | Open (proposed) | Issues [#14](https://github.com/abelpz/biblia-studio/issues/14) (`door43` catalog + metadata), [#15](https://github.com/abelpz/biblia-studio/issues/15) (`translation` GL→GL + source-first). Product glossary / pairing narrative: land with [#15](https://github.com/abelpz/biblia-studio/issues/15) or a dedicated docs issue. |
 
 Update this table when new milestones start.
 
+## M3 inventory (packages-only; `origin/main` = Mar 2026)
+
+| Area            | On **`origin/main` (merged)**                                                | In progress (local / draft PRs)                                                                                                                                                                                                                                    |
+| --------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Door43**      | Repo search (`searchDoor43Repos`), version (`fetchDoor43Version`), constants | [#14](https://github.com/abelpz/biblia-studio/issues/14): `listTcReadyTranslationHelpsResources`, `buildCatalogUrl`, `fetchDoor43CatalogMetadata`, `parseCatalogMetadata`, `DOOR43_API_V1_BASE_URL`, catalog summary `catalogOwner` / `catalogRepo` / `catalogRef` |
+| **Translation** | Stub package (re-exports namespaces only)                                    | [#15](https://github.com/abelpz/biblia-studio/issues/15): `compareGlToGlTcReadyTranslationHelps`, `findTargetCatalogEntriesClaimingSource` + tests                                                                                                                 |
+| **Docs**        | M1/M2 milestones closed                                                      | `docs/17-translation-helps-and-resources.md` (glossary + pairing); optional follow-up issues for **book × help matrix**, **web** surface                                                                                                                           |
+| **Apps/web**    | Door43 repo list (M1), `/editor` (M2)                                        | No tc-ready / translation-helps page in milestone scope yet                                                                                                                                                                                                        |
+
+**Note:** Create/link a GitHub **Milestone** “M3 — …” and attach [#14](https://github.com/abelpz/biblia-studio/issues/14)–[#15](https://github.com/abelpz/biblia-studio/issues/15) when you want the UI to track the phase explicitly.
+
 ## Active milestone
 
-_None — add the next milestone in GitHub when you plan the next slice._
+**M3 — Translation helps: catalog, metadata, GL pairing** — [#14](https://github.com/abelpz/biblia-studio/issues/14), [#15](https://github.com/abelpz/biblia-studio/issues/15) (proposed milestone name; link GitHub Milestone when created).
 
 ## Related
 
