@@ -11,6 +11,10 @@ type Search = {
   org?: string;
   compare?: string;
   limit?: string;
+  /** Target scan uses **`lang`**. When set with **`srcId`**, rows whose metadata **`dublin_core.source`** matches **`srcLang` + `srcId`** (optional **`srcVer`**) are listed. */
+  srcLang?: string;
+  srcId?: string;
+  srcVer?: string;
 };
 
 function parseLimit(raw: string | undefined): number | undefined {
@@ -31,6 +35,12 @@ export default async function TranslationHelpsPage({
   const org = sp.org?.trim() || undefined;
   const compareLang = sp.compare?.trim() || undefined;
   const limit = parseLimit(sp.limit);
+  const srcLang = sp.srcLang?.trim() || undefined;
+  const srcId = sp.srcId?.trim() || undefined;
+  const srcVer = sp.srcVer?.trim() || undefined;
+  const sourceFirstMode = Boolean(
+    srcLang && srcLang.length > 0 && srcId && srcId.length > 0,
+  );
 
   const port = createTranslationHelpsAdapter();
 
@@ -43,7 +53,10 @@ export default async function TranslationHelpsPage({
         Read-only data from Door43{" "}
         <code style={{ fontSize: "0.85em" }}>GET /api/v1/catalog/search</code> (
         <code>topic=tc-ready</code>). GL→GL comparison matches{" "}
-        <code>subject</code> + <code>identifier</code> only.
+        <code>subject</code> + <code>identifier</code> only.{" "}
+        <strong>Source-first</strong> filters targets whose metadata claims a
+        source lineage via <code>srcLang</code>, <code>srcId</code>, optional{" "}
+        <code>srcVer</code> (see form below).
       </p>
 
       <form
@@ -96,6 +109,45 @@ export default async function TranslationHelpsPage({
         <label
           style={{ display: "flex", flexDirection: "column", gap: "0.2rem" }}
         >
+          <span style={{ fontSize: "0.75rem", color: "#555" }}>
+            Source lang (metadata)
+          </span>
+          <input
+            name="srcLang"
+            defaultValue={srcLang ?? ""}
+            placeholder="en"
+            style={{ width: "6rem", padding: "0.35rem" }}
+          />
+        </label>
+        <label
+          style={{ display: "flex", flexDirection: "column", gap: "0.2rem" }}
+        >
+          <span style={{ fontSize: "0.75rem", color: "#555" }}>
+            Source ID (metadata)
+          </span>
+          <input
+            name="srcId"
+            defaultValue={srcId ?? ""}
+            placeholder="tn"
+            style={{ width: "6rem", padding: "0.35rem" }}
+          />
+        </label>
+        <label
+          style={{ display: "flex", flexDirection: "column", gap: "0.2rem" }}
+        >
+          <span style={{ fontSize: "0.75rem", color: "#555" }}>
+            Source ver (opt.)
+          </span>
+          <input
+            name="srcVer"
+            defaultValue={srcVer ?? ""}
+            placeholder="v1"
+            style={{ width: "6rem", padding: "0.35rem" }}
+          />
+        </label>
+        <label
+          style={{ display: "flex", flexDirection: "column", gap: "0.2rem" }}
+        >
           <span style={{ fontSize: "0.75rem", color: "#555" }}>Limit</span>
           <input
             name="limit"
@@ -113,6 +165,16 @@ export default async function TranslationHelpsPage({
           port={port}
           sourceLanguage={lang}
           targetLanguage={compareLang}
+          organization={org}
+          limit={limit}
+        />
+      ) : sourceFirstMode && srcLang && srcId ? (
+        <SourceFirstSection
+          port={port}
+          targetLanguage={lang}
+          sourceLanguage={srcLang}
+          sourceIdentifier={srcId}
+          sourceVersion={srcVer && srcVer.length > 0 ? srcVer : undefined}
           organization={org}
           limit={limit}
         />
@@ -191,6 +253,101 @@ async function CatalogSection({
                 <td style={{ padding: "0.35rem 0.5rem" }}>{r.subject}</td>
                 <td style={{ padding: "0.35rem 0.5rem" }}>{r.title}</td>
                 <td style={{ padding: "0.35rem 0.5rem" }}>{r.version}</td>
+                <td style={{ padding: "0.35rem 0.5rem", fontSize: "0.82rem" }}>
+                  {r.catalogOwner && r.catalogRepo ? (
+                    <span>
+                      {r.catalogOwner}/{r.catalogRepo}
+                    </span>
+                  ) : (
+                    "—"
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
+}
+
+async function SourceFirstSection({
+  port,
+  targetLanguage,
+  sourceLanguage,
+  sourceIdentifier,
+  sourceVersion,
+  organization,
+  limit,
+}: {
+  port: TranslationHelpsPort;
+  targetLanguage: string;
+  sourceLanguage: string;
+  sourceIdentifier: string;
+  sourceVersion?: string;
+  organization?: string;
+  limit?: number;
+}) {
+  const rows = await port.findTargetsClaimingSource({
+    targetLanguage,
+    sourceLanguage,
+    sourceIdentifier,
+    sourceVersion,
+    organization,
+    limit,
+  });
+
+  const claimSummary = `${sourceLanguage}/${sourceIdentifier}${
+    sourceVersion ? `@${sourceVersion}` : ""
+  }`;
+
+  return (
+    <>
+      <h2 style={{ fontSize: "1.05rem", marginBottom: "0.5rem" }}>
+        Source-first — targets in <strong>{targetLanguage}</strong> claiming{" "}
+        <code style={{ fontSize: "0.95em" }}>{claimSummary}</code>
+      </h2>
+      <p style={{ marginBottom: "0.75rem", fontSize: "0.9rem", color: "#333" }}>
+        {rows.length} match{rows.length === 1 ? "" : "es"} (metadata scan;
+        capped by limit)
+      </p>
+      <div style={{ overflowX: "auto" }}>
+        <table
+          style={{
+            borderCollapse: "collapse",
+            width: "100%",
+            fontSize: "0.88rem",
+          }}
+        >
+          <thead>
+            <tr style={{ borderBottom: "1px solid #ccc", textAlign: "left" }}>
+              <th style={{ padding: "0.35rem 0.5rem" }}>ID</th>
+              <th style={{ padding: "0.35rem 0.5rem" }}>Subject</th>
+              <th style={{ padding: "0.35rem 0.5rem" }}>Title</th>
+              <th style={{ padding: "0.35rem 0.5rem" }}>Version</th>
+              <th style={{ padding: "0.35rem 0.5rem" }}>Matched source</th>
+              <th style={{ padding: "0.35rem 0.5rem" }}>Repo</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr
+                key={`${r.subject}-${r.identifier}-${r.version}`}
+                style={{ borderBottom: "1px solid #eee" }}
+              >
+                <td
+                  style={{ padding: "0.35rem 0.5rem", fontFamily: "monospace" }}
+                >
+                  {r.identifier}
+                </td>
+                <td style={{ padding: "0.35rem 0.5rem" }}>{r.subject}</td>
+                <td style={{ padding: "0.35rem 0.5rem" }}>{r.title}</td>
+                <td style={{ padding: "0.35rem 0.5rem" }}>{r.version}</td>
+                <td style={{ padding: "0.35rem 0.5rem", fontSize: "0.82rem" }}>
+                  {r.matchedSources
+                    .map((s) => `${s.language}/${s.identifier}@${s.version}`)
+                    .join(", ")}
+                </td>
                 <td style={{ padding: "0.35rem 0.5rem", fontSize: "0.82rem" }}>
                   {r.catalogOwner && r.catalogRepo ? (
                     <span>

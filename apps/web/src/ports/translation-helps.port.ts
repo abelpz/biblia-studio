@@ -38,6 +38,21 @@ export type GlToGlCompareSummary = {
   onlyInTarget: GlToGlOnlyTargetRow[];
 };
 
+/** Target catalog row whose metadata **`dublin_core.source`** claims the requested lineage. */
+export type SourceFirstClaimRow = {
+  identifier: string;
+  subject: string;
+  title: string;
+  version: string;
+  catalogOwner?: string;
+  catalogRepo?: string;
+  matchedSources: Array<{
+    identifier: string;
+    language: string;
+    version: string;
+  }>;
+};
+
 export interface TranslationHelpsPort {
   listTcReadyCatalog(args: {
     language: string;
@@ -51,4 +66,14 @@ export interface TranslationHelpsPort {
     organization?: string;
     limit?: number;
   }): Promise<GlToGlCompareSummary>;
+
+  /** Scan tc-ready rows for **`targetLanguage`** and keep those whose metadata **`source`** matches **`sourceLanguage` + `sourceIdentifier`**. */
+  findTargetsClaimingSource(args: {
+    targetLanguage: string;
+    sourceLanguage: string;
+    sourceIdentifier: string;
+    sourceVersion?: string;
+    organization?: string;
+    limit?: number;
+  }): Promise<SourceFirstClaimRow[]>;
 }

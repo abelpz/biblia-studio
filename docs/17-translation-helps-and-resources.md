@@ -108,6 +108,8 @@ Cross-links: [source-first pairing](#source-first-pairing-recommended-catalog-is
 
 **GL→GL prototype (`@biblia-studio/translation`):** `compareGlToGlTcReadyTranslationHelps({ sourceLanguage, targetLanguage, ... })` loads tc-ready catalog rows for **both** gateway languages and returns **`matched`**, **`missingInTarget`**, and **`onlyInTarget`**, keyed by **`subject` + `identifier`** (resource abbreviation). That is **catalog resource parity**, not verse-level or RC-ingredient parity; interlinking and “expected units” per scope follow [uW-Tools-Collab](https://github.com/unfoldingWord/uW-Tools-Collab) and future milestones. See [`packages/translation` README](../packages/translation/README.md).
 
+**Source-first scan:** `findTargetCatalogEntriesClaimingSource({ targetLanguage, sourceLanguage, sourceIdentifier, ... })` lists **target** tc-ready rows whose catalog **`dublin_core.source`** claims that lineage. **`apps/web`** exposes this on **`/translation-helps`** when both **`srcLang`** and **`srcId`** query params are set (**`lang`** = target catalog language; optional **`srcVer`**); **GL→GL compare** (`compare` ≠ `lang`) takes precedence over source-first vs plain catalog.
+
 ### Catalog: `topic` vs `subject` (scripture vs helps)
 
 - **`topic=tc-ready`** — Primary filter for “in the production / translationCore-style catalog slice.” Often **sufficient on its own** for an inventory pass: query once per **source GL** and once per **target GL** **without** narrowing by `subject`, then **classify rows by hand or by simple rules** (scripture bundles vs helps vs OBS, etc.).

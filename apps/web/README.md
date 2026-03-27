@@ -3,13 +3,13 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 `dev` / `build` use **`--webpack`** so workspace packages (`@biblia-studio/door43`, `@biblia-studio/editing`, `@biblia-studio/formats`) with NodeNext-style `.js` imports to `.ts` sources resolve correctly. See `next.config.js` (`transpilePackages`, `resolve.extensionAlias`).
 
 - **`/editor`** — minimal ProseMirror scripture editor (USFM via `formats` + `editing`).
-- **`/translation-helps`** — tc-ready Translation Helps catalog (query: `lang`, optional `org`, optional `compare` for GL→GL); port + adapter call `door43` / `translation`.
+- **`/translation-helps`** — tc-ready Translation Helps catalog (`lang`, optional `org`, `limit`); GL→GL via `compare`; **source-first** via `srcLang` + `srcId` (optional `srcVer`) on the same page. Port + adapter use `door43` / `translation`.
 
 ## Smoke check (local)
 
 1. From repo root: `bunx turbo run dev --filter=web` (or `cd apps/web && bun run dev`).
 2. Open [http://localhost:3000/editor](http://localhost:3000/editor) — you should see the editor, USFM preview, and **Download USFM**.
-3. Open [http://localhost:3000/translation-helps?lang=en](http://localhost:3000/translation-helps?lang=en) — catalog table loads (network to Door43).
+3. Open [http://localhost:3000/translation-helps?lang=en](http://localhost:3000/translation-helps?lang=en) — catalog table loads (network to Door43). Example source-first: [http://localhost:3000/translation-helps?lang=es&srcLang=en&srcId=tn](http://localhost:3000/translation-helps?lang=es&srcLang=en&srcId=tn).
 4. CI-equivalent: `bun run turbo run build --filter=web` (compiles `/editor` and `/translation-helps`).
 5. Tests: `bun run turbo run test --filter=web` — Vitest for **`translation-helps` driven adapter** (mocked `door43` / `translation`).
 
