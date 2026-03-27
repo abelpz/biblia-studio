@@ -1,9 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createTranslationHelpsAdapter } from "./translation-helps.adapter";
 
-vi.mock("@biblia-studio/door43", () => ({
-  listTcReadyTranslationHelpsResources: vi.fn(),
-}));
+vi.mock("@biblia-studio/door43", async (importOriginal) => {
+  const door43 = await importOriginal<typeof import("@biblia-studio/door43")>();
+  return {
+    ...door43,
+    listTcReadyTranslationHelpsResources: vi.fn(),
+  };
+});
 
 vi.mock("@biblia-studio/translation", () => ({
   compareGlToGlTcReadyTranslationHelps: vi.fn(),
@@ -43,6 +47,9 @@ describe("createTranslationHelpsAdapter", () => {
     expect(rows[0]).toMatchObject({
       identifier: "tn",
       catalogRepo: "r",
+      door43RepoUrl: "https://git.door43.org/o/r",
+      door43MetadataUrl:
+        "https://git.door43.org/api/v1/catalog/metadata/o/r/v1",
     });
     expect(listTcReadyTranslationHelpsResources).toHaveBeenCalledWith(
       expect.objectContaining({ language: "en", limit: 500 }),
@@ -60,17 +67,23 @@ describe("createTranslationHelpsAdapter", () => {
             identifier: "tn",
             subject: "S",
             title: "EN",
-            version: "1",
+            version: "v1",
             description: undefined,
             bundleUrl: undefined,
+            catalogOwner: "uw",
+            catalogRepo: "en_tn",
+            catalogRef: "v1",
           },
           target: {
             identifier: "tn",
             subject: "S",
             title: "ES",
-            version: "1",
+            version: "v2",
             description: undefined,
             bundleUrl: undefined,
+            catalogOwner: "uw",
+            catalogRepo: "es_tn",
+            catalogRef: "v2",
           },
         },
       ],
@@ -85,6 +98,18 @@ describe("createTranslationHelpsAdapter", () => {
     expect(out.matched).toHaveLength(1);
     expect(out.matched[0]?.sourceTitle).toBe("EN");
     expect(out.matched[0]?.targetTitle).toBe("ES");
+    expect(out.matched[0]?.sourceDoor43RepoUrl).toBe(
+      "https://git.door43.org/uw/en_tn",
+    );
+    expect(out.matched[0]?.sourceDoor43MetadataUrl).toBe(
+      "https://git.door43.org/api/v1/catalog/metadata/uw/en_tn/v1",
+    );
+    expect(out.matched[0]?.targetDoor43RepoUrl).toBe(
+      "https://git.door43.org/uw/es_tn",
+    );
+    expect(out.matched[0]?.targetDoor43MetadataUrl).toBe(
+      "https://git.door43.org/api/v1/catalog/metadata/uw/es_tn/v2",
+    );
   });
 
   it("findTargetsClaimingSource forwards args and maps slim rows", async () => {
@@ -118,6 +143,9 @@ describe("createTranslationHelpsAdapter", () => {
     expect(out[0]).toMatchObject({
       identifier: "tn",
       title: "ES notes",
+      door43RepoUrl: "https://git.door43.org/u/es_tn",
+      door43MetadataUrl:
+        "https://git.door43.org/api/v1/catalog/metadata/u/es_tn/main",
       matchedSources: [{ language: "en", identifier: "tn", version: "1" }],
     });
     expect(findTargetCatalogEntriesClaimingSource).toHaveBeenCalledWith(

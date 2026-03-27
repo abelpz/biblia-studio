@@ -9,6 +9,12 @@ export type TcReadyHelpCatalogRow = {
   version: string;
   catalogOwner?: string;
   catalogRepo?: string;
+  /** Catalog ref for metadata (often same as `version`). */
+  catalogRef?: string;
+  /** Door43 Gitea repo when **`catalogOwner` + `catalogRepo`** are known. */
+  door43RepoUrl?: string;
+  /** `GET /api/v1/catalog/metadata/{owner}/{repo}/{ref}` when coords + ref exist. */
+  door43MetadataUrl?: string;
 };
 
 export type GlToGlMatchedRow = {
@@ -16,18 +22,26 @@ export type GlToGlMatchedRow = {
   identifier: string;
   sourceTitle: string;
   targetTitle: string;
+  sourceDoor43RepoUrl?: string;
+  sourceDoor43MetadataUrl?: string;
+  targetDoor43RepoUrl?: string;
+  targetDoor43MetadataUrl?: string;
 };
 
 export type GlToGlMissingRow = {
   subject: string;
   identifier: string;
   sourceTitle: string;
+  sourceDoor43RepoUrl?: string;
+  sourceDoor43MetadataUrl?: string;
 };
 
 export type GlToGlOnlyTargetRow = {
   subject: string;
   identifier: string;
   targetTitle: string;
+  targetDoor43RepoUrl?: string;
+  targetDoor43MetadataUrl?: string;
 };
 
 export type GlToGlCompareSummary = {
@@ -46,6 +60,9 @@ export type SourceFirstClaimRow = {
   version: string;
   catalogOwner?: string;
   catalogRepo?: string;
+  catalogRef?: string;
+  door43RepoUrl?: string;
+  door43MetadataUrl?: string;
   matchedSources: Array<{
     identifier: string;
     language: string;
