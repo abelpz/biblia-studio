@@ -33,11 +33,13 @@ const extLink = {
 function Door43Links({
   repoUrl,
   metadataUrl,
+  bundleUrl,
 }: {
   repoUrl?: string;
   metadataUrl?: string;
+  bundleUrl?: string;
 }) {
-  if (!repoUrl && !metadataUrl) {
+  if (!repoUrl && !metadataUrl && !bundleUrl) {
     return <span style={{ color: "#888" }}>—</span>;
   }
   return (
@@ -50,6 +52,11 @@ function Door43Links({
       {metadataUrl ? (
         <a href={metadataUrl} {...extLink} style={{ whiteSpace: "nowrap" }}>
           metadata
+        </a>
+      ) : null}
+      {bundleUrl ? (
+        <a href={bundleUrl} {...extLink} style={{ whiteSpace: "nowrap" }}>
+          bundle
         </a>
       ) : null}
     </span>
@@ -299,8 +306,11 @@ async function CatalogSection({
                       <Door43Links
                         repoUrl={r.door43RepoUrl}
                         metadataUrl={r.door43MetadataUrl}
+                        bundleUrl={r.door43BundleUrl}
                       />
                     </span>
+                  ) : r.door43BundleUrl ? (
+                    <Door43Links bundleUrl={r.door43BundleUrl} />
                   ) : (
                     "—"
                   )}
@@ -406,8 +416,11 @@ async function SourceFirstSection({
                       <Door43Links
                         repoUrl={r.door43RepoUrl}
                         metadataUrl={r.door43MetadataUrl}
+                        bundleUrl={r.door43BundleUrl}
                       />
                     </span>
+                  ) : r.door43BundleUrl ? (
+                    <Door43Links bundleUrl={r.door43BundleUrl} />
                   ) : (
                     "—"
                   )}
@@ -480,12 +493,14 @@ async function CompareSection({
                   <Door43Links
                     repoUrl={m.sourceDoor43RepoUrl}
                     metadataUrl={m.sourceDoor43MetadataUrl}
+                    bundleUrl={m.sourceDoor43BundleUrl}
                   />
                   <span style={{ color: "#888", margin: "0 0.35rem" }}>·</span>
                   <span style={{ color: "#555" }}>Target: </span>
                   <Door43Links
                     repoUrl={m.targetDoor43RepoUrl}
                     metadataUrl={m.targetDoor43MetadataUrl}
+                    bundleUrl={m.targetDoor43BundleUrl}
                   />
                 </span>
               </li>
@@ -546,6 +561,7 @@ async function CompareSection({
                   <Door43Links
                     repoUrl={m.targetDoor43RepoUrl}
                     metadataUrl={m.targetDoor43MetadataUrl}
+                    bundleUrl={m.targetDoor43BundleUrl}
                   />
                 </span>
               </li>

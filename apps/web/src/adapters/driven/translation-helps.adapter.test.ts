@@ -35,10 +35,10 @@ describe("createTranslationHelpsAdapter", () => {
         title: "Notes",
         version: "v1",
         description: undefined,
-        bundleUrl: undefined,
         catalogOwner: "o",
         catalogRepo: "r",
         catalogRef: "v1",
+        bundleUrl: "https://git.door43.org/o/r/archive/v1.zip",
       },
     ]);
     const adapter = createTranslationHelpsAdapter();
@@ -50,6 +50,7 @@ describe("createTranslationHelpsAdapter", () => {
       door43RepoUrl: "https://git.door43.org/o/r",
       door43MetadataUrl:
         "https://git.door43.org/api/v1/catalog/metadata/o/r/v1",
+      door43BundleUrl: "https://git.door43.org/o/r/archive/v1.zip",
     });
     expect(listTcReadyTranslationHelpsResources).toHaveBeenCalledWith(
       expect.objectContaining({ language: "en", limit: 500 }),
@@ -69,10 +70,10 @@ describe("createTranslationHelpsAdapter", () => {
             title: "EN",
             version: "v1",
             description: undefined,
-            bundleUrl: undefined,
             catalogOwner: "uw",
             catalogRepo: "en_tn",
             catalogRef: "v1",
+            bundleUrl: "https://ex/en.zip",
           },
           target: {
             identifier: "tn",
@@ -80,7 +81,7 @@ describe("createTranslationHelpsAdapter", () => {
             title: "ES",
             version: "v2",
             description: undefined,
-            bundleUrl: undefined,
+            bundleUrl: "https://ex/es.zip",
             catalogOwner: "uw",
             catalogRepo: "es_tn",
             catalogRef: "v2",
@@ -110,6 +111,8 @@ describe("createTranslationHelpsAdapter", () => {
     expect(out.matched[0]?.targetDoor43MetadataUrl).toBe(
       "https://git.door43.org/api/v1/catalog/metadata/uw/es_tn/v2",
     );
+    expect(out.matched[0]?.sourceDoor43BundleUrl).toBe("https://ex/en.zip");
+    expect(out.matched[0]?.targetDoor43BundleUrl).toBe("https://ex/es.zip");
   });
 
   it("findTargetsClaimingSource forwards args and maps slim rows", async () => {
@@ -121,10 +124,10 @@ describe("createTranslationHelpsAdapter", () => {
           title: "ES notes",
           version: "2",
           description: undefined,
-          bundleUrl: undefined,
           catalogOwner: "u",
           catalogRepo: "es_tn",
           catalogRef: "main",
+          bundleUrl: "https://ex/target.zip",
         },
         metadata: {} as never,
         matchedSources: [{ identifier: "tn", language: "en", version: "1" }],
@@ -146,6 +149,7 @@ describe("createTranslationHelpsAdapter", () => {
       door43RepoUrl: "https://git.door43.org/u/es_tn",
       door43MetadataUrl:
         "https://git.door43.org/api/v1/catalog/metadata/u/es_tn/main",
+      door43BundleUrl: "https://ex/target.zip",
       matchedSources: [{ language: "en", identifier: "tn", version: "1" }],
     });
     expect(findTargetCatalogEntriesClaimingSource).toHaveBeenCalledWith(
