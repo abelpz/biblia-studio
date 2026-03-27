@@ -36,4 +36,4 @@ Irreversible or costly-to-change decisions (auth, sync, storage model) — [ADR 
 
 ## Related index
 
-- [Overview](./00-overview.md) · [Bible editor product vision](./15-bible-editor-product-vision.md) · [Package map](./02-package-map.md) · [Hexagonal apps](./05-hexagonal-apps.md) · [UI philosophy](./04-ui-philosophy.md) · [Milestones & scope](./13-milestones-and-scope.md) · [AGENTS.md](../AGENTS.md)
+- [Overview](./00-overview.md) · [Bible editor product vision](./15-bible-editor-product-vision.md) · [Translation helps](./17-translation-helps-and-resources.md) · [Package map](./02-package-map.md) · [Hexagonal apps](./05-hexagonal-apps.md) · [UI philosophy](./04-ui-philosophy.md) · [Milestones & scope](./13-milestones-and-scope.md) · [AGENTS.md](../AGENTS.md)
