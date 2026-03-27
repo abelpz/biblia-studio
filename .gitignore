@@ -41,5 +41,8 @@ yarn-error.log*
 .DS_Store
 *.pem
 
+# Local vendored trees (not part of workspace packages)
+vendor/
+
 # Local GitHub issue drafts (issues live on GitHub)
 .cursor/.issue-*.md
