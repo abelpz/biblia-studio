@@ -11,6 +11,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 2. Open [http://localhost:3000/editor](http://localhost:3000/editor) — you should see the editor, USFM preview, and **Download USFM**.
 3. Open [http://localhost:3000/translation-helps?lang=en](http://localhost:3000/translation-helps?lang=en) — catalog table loads (network to Door43).
 4. CI-equivalent: `bun run turbo run build --filter=web` (compiles `/editor` and `/translation-helps`).
+5. Tests: `bun run turbo run test --filter=web` — Vitest for **`translation-helps` driven adapter** (mocked `door43` / `translation`).
 
 ## Getting Started
 
