@@ -41,9 +41,9 @@ const subset = await compareTcReadySourceResourcesToTarget({
 });
 ```
 
-## Book matrix (metadata `projects`, v0)
+## Book matrix (`projects[].path` file inventory)
 
-For each **matched** GL→GL tc-ready resource, fetch **catalog metadata** for **source** and **target** and diff **`manifest.projects`** book identifiers (`projects[].identifier`):
+For each **matched** GL→GL tc-ready resource, fetch **catalog metadata** and **recursive `git/trees`** for **source** and **target** (`@biblia-studio/door43` **`fetchDoor43RepoGitTree`**). Collect **blob** paths under each **`manifest.projects[].path`** root, then diff **in both / source-only / target-only** (`pathsInBoth`, etc.). Scripture helps often show as single-book USFM paths; Translation Words / Academy show many paths under folder roots.
 
 ```ts
 import { compareGlToGlTcReadyBookProjects } from "@biblia-studio/translation";
@@ -55,7 +55,7 @@ const matrix = await compareGlToGlTcReadyBookProjects({
 });
 ```
 
-This does **not** inspect ingredient files (TSV rows, etc.); it is **manifest book lists** only. See [Translation Helps & resources](../../docs/17-translation-helps-and-resources.md).
+This is **repo file paths** at the catalog ref, not verse-level or per-TSV-row checks. See [Translation Helps & resources](../../docs/17-translation-helps-and-resources.md) and [domain API](../../docs/18-translation-helps-domain-api.md).
 
 ## Source-first pairing (metadata `source`)
 

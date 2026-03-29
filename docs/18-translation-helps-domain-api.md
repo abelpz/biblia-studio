@@ -240,6 +240,8 @@ export async function compareGlToGlTcReadyTranslationHelps(
 
 ### 4.2 Book matrix from matched pairs (`src/translation-helps-book-matrix-gl.ts`) — **shipped**
 
+For each matched pair (same helper as GL→GL compare), loads **catalog metadata** on both sides, then **recursive git trees** (`fetchDoor43RepoGitTree` → `GET .../git/trees/{ref}?recursive=true` in `@biblia-studio/door43`). **Blob** paths under each **`manifest.projects[].path`** root are collected and diffed (sorted strings). Scripture helps typically surface as paths like **`mat.usfm`**; Translation Words / Academy surface as many paths under **`bible/…`**, **`intro/…`**, etc.
+
 ```ts
 export type CompareGlToGlTcReadyBookProjectsOptions =
   CompareGlToGlTcReadyHelpsOptions & {
@@ -251,9 +253,9 @@ export type MatchedTcReadyBookProjectCoverage = {
   key: TranslationHelpsResourceKey;
   sourceTitle: string;
   targetTitle: string;
-  bookIdsInBoth: string[];
-  bookIdsOnlyInSource: string[];
-  bookIdsOnlyInTarget: string[];
+  pathsInBoth: string[];
+  pathsOnlyInSource: string[];
+  pathsOnlyInTarget: string[];
 };
 
 export type SkippedTcReadyBookProjectRow = {
