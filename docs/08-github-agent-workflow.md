@@ -6,7 +6,7 @@ This is the **default delivery workflow** for Biblia Studio when using **Cursor 
 
 In Cursor, the MCP server may appear as **`project-0-biblia-studio-github`** (or similar); tool **names** below are stable.
 
-**Human as guide:** they direct; agents run git/GitHub steps and **ask** before irreversible moves (see **[`AGENTS.md` § Human partnership](../AGENTS.md#human-partnership-reports-and-ownership)**). Close substantive updates with **Done** / **Next**.
+**Human as guide:** they direct; agents run git/GitHub steps and **ask** before irreversible moves (see **[`AGENTS.md` § Human partnership](../AGENTS.md#human-partnership-reports-and-ownership)**). Close substantive updates with **Done** / **Next** / **Suggest** (short default next step).
 
 ## Principles
 

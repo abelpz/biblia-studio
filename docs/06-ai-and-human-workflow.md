@@ -20,7 +20,7 @@ Biblia Studio is built primarily by **AI coding agents**, with **humans** as **g
 6. **Surface uncertainty** — explicit questions for humans when requirements conflict with docs or common sense.
 7. **Close out each step** — Before pausing or moving on, run the [**closure checklist** in `AGENTS.md`](../AGENTS.md#after-each-step-closure-checklist): update package map, READMEs, workflow docs, PR/issue links, and ADRs that the step touched — not only code.
 8. **Stay aligned with milestones** — Restate issue + milestone; add an **Alignment** block (on track / at risk); **escalate** on scope drift per [Milestones & scope](./13-milestones-and-scope.md).
-9. **Close substantive replies with Done / Next** — per [`AGENTS.md` § Human partnership](../AGENTS.md#human-partnership-reports-and-ownership).
+9. **Close substantive replies with Done / Next / Suggest** — per [`AGENTS.md` § Human partnership](../AGENTS.md#human-partnership-reports-and-ownership).
 
 ## What human reviewers (guide) should verify
 
@@ -57,7 +57,7 @@ Biblia Studio is built primarily by **AI coding agents**, with **humans** as **g
 
 ## Communication norms
 
-- Agents: end every **substantive** message with **Done** / **Next** per [`AGENTS.md` § Human partnership](../AGENTS.md#human-partnership-reports-and-ownership). In the body, include **what changed** (including **docs and config**), **commands run**, and **risks / follow-ups**. If a [closure checklist](../AGENTS.md#after-each-step-closure-checklist) row was N/A, say so briefly.
+- Agents: end every **substantive** message with **Done** / **Next** / **Suggest** (few-word recommended next step the human can approve with “yes, do that”) per [`AGENTS.md` § Human partnership](../AGENTS.md#human-partnership-reports-and-ownership). In the body, include **what changed** (including **docs and config**), **commands run**, and **risks / follow-ups**. If a [closure checklist](../AGENTS.md#after-each-step-closure-checklist) row was N/A, say so briefly.
 - Humans: prefer **concrete** change requests (file + intent) over generic “make it better.”
 
 ## Related

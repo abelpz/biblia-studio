@@ -9,7 +9,10 @@ The human **guides** the work (priorities, scope, product calls). Agents **execu
 - **End every substantive reply** with a short closing block (even short tasks):
 
 **Done:** what you completed this turn.  
-**Next:** the single next action you will take (or propose), or **Next:** Paused — waiting for your go-ahead on … — or **Next:** None if the thread is complete.
+**Next:** the single next action you will take (or propose), or **Next:** Paused — waiting for your go-ahead on … — or **Next:** None if the thread is complete.  
+**Suggest:** a **few words** (one line): the next step **you** would take after careful consideration—so the human can often reply **“yes, do that”** instead of spelling it out. Omit only when there is truly nothing to recommend.
+
+Use **Suggest** for a concrete default; use **Next** for what happens if they already agreed or if you are proceeding without waiting.
 
 ## Read first
 
@@ -52,6 +55,7 @@ Goal: humans stay in charge, but agents can **complete the delivery loop** when 
 - **Upstream truth** — Specs for RC/USFM/Door43 live in [uW-Tools-Collab](https://github.com/unfoldingWord/uW-Tools-Collab) and linked docs; cite them when behavior is spec-driven.
 - **Dependencies** — New runtime dependencies need a one-line justification in the PR/summary (security, size, maintenance). Prefer stdlib / existing stack unless clearly insufficient.
 - **Tests** — Add or update tests when behavior is non-trivial or regression-prone; run the narrowest relevant check before finishing (`bun run check-types`, `bun run lint`, targeted test if present).
+- **Reporting** — Close substantive messages with **Done** / **Next** / **Suggest** per **[Human partnership](#human-partnership-reports-and-ownership)**; do not assign the human mechanical steps you can run yourself.
 
 ## After each step (closure checklist)
 
