@@ -57,15 +57,18 @@ export type GlToGlCompareSummary = {
   onlyInTarget: GlToGlOnlyTargetRow[];
 };
 
-/** Book ids from catalog **metadata** `projects` for a matched GL→GL help resource. */
+/**
+ * For each matched resource, repo **blob** paths under catalog **`projects[].path`** roots
+ * (recursive), compared between source and target — not only top-level project identifiers.
+ */
 export type GlToGlBookMatrixRow = {
   subject: string;
   identifier: string;
   sourceTitle: string;
   targetTitle: string;
-  bookIdsInBoth: string[];
-  bookIdsOnlyInSource: string[];
-  bookIdsOnlyInTarget: string[];
+  pathsInBoth: string[];
+  pathsOnlyInSource: string[];
+  pathsOnlyInTarget: string[];
 };
 
 export type GlToGlBookMatrixSkipped = {
@@ -80,6 +83,14 @@ export type GlToGlBookMatrixSummary = {
   rows: GlToGlBookMatrixRow[];
   skipped: GlToGlBookMatrixSkipped[];
 };
+
+/**
+ * Explicit source set for **`TranslationHelpsPort.compareTcReadySourceResourcesToTarget`**:
+ * either **`subject` + `identifier`** or a full row from **`listTcReadyCatalog`**.
+ */
+export type TcReadySourceResourcePortInput =
+  | Pick<TcReadyHelpCatalogRow, "subject" | "identifier">
+  | TcReadyHelpCatalogRow;
 
 /** Target catalog row whose metadata **`dublin_core.source`** claims the requested lineage. */
 export type SourceFirstClaimRow = {
@@ -115,6 +126,21 @@ export interface TranslationHelpsPort {
   }): Promise<GlToGlCompareSummary>;
 
   /**
+   * Compare a **caller-chosen** list of source resources to the full tc-ready catalog for **`targetLanguage`**.
+   * Candidate rows must share **`subject` + `identifier`**. When the **target** row has catalog **metadata** coords,
+   * **`sourceLanguage`** is **required** so **`dublin_core.source`** on the target can confirm the upstream
+   * **`language` + `identifier`**. Targets **without** coords still match on catalog key only.
+   */
+  compareTcReadySourceResourcesToTarget(args: {
+    sourceResources: readonly TcReadySourceResourcePortInput[];
+    targetLanguage: string;
+    sourceLanguage?: string;
+    organization?: string;
+    limit?: number;
+    includeTargetExtras?: boolean;
+  }): Promise<GlToGlCompareSummary>;
+
+  /**
    * For **matched** GL→GL tc-ready rows, fetch catalog metadata and diff **`projects`** book identifiers
    * (see **`compareGlToGlTcReadyBookProjects`** in `@biblia-studio/translation`).
    */
@@ -127,11 +153,16 @@ export interface TranslationHelpsPort {
     matrixMatchedLimit?: number;
   }): Promise<GlToGlBookMatrixSummary>;
 
-  /** Scan tc-ready rows for **`targetLanguage`** and keep those whose metadata **`source`** matches **`sourceLanguage` + `sourceIdentifier`**. */
+  /**
+   * Scan tc-ready rows for **`targetLanguage`** and keep those whose metadata **`source`** matches
+   * **`sourceLanguage` + `sourceIdentifier`** (optional version; **`sourceCatalogOwner`** when the manifest pins org).
+   */
   findTargetsClaimingSource(args: {
     targetLanguage: string;
     sourceLanguage: string;
     sourceIdentifier: string;
+    /** Catalog **`owner`** for the upstream resource; required when a matching `source` entry has `owner` / `organization`. */
+    sourceCatalogOwner?: string;
     sourceVersion?: string;
     organization?: string;
     limit?: number;

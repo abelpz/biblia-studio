@@ -186,4 +186,63 @@ describe("findTargetCatalogEntriesClaimingSource", () => {
 
     expect(hit).toHaveLength(1);
   });
+
+  it("requires sourceCatalogOwner when metadata source pins owner", async () => {
+    const fetchMock: typeof fetch = async (input) => {
+      const url = typeof input === "string" ? input : (input as Request).url;
+
+      if (url.includes("/catalog/search")) {
+        return okJson({
+          ok: true,
+          data: [
+            {
+              owner: "es_gl",
+              name: "es_tn",
+              abbreviation: "tn",
+              subject: "TSV Translation Notes",
+              title: "ES",
+              branch_or_tag_name: "v1",
+              zipball_url: "",
+            },
+          ],
+        });
+      }
+
+      return okJson({
+        dublin_core: {
+          identifier: "tn",
+          subject: "TSV Translation Notes",
+          version: "1",
+          source: [
+            {
+              identifier: "tn",
+              language: "en",
+              version: "64",
+              owner: "unfoldingWord",
+            },
+          ],
+        },
+        projects: [],
+      });
+    };
+
+    const noOwnerParam = await findTargetCatalogEntriesClaimingSource({
+      targetLanguage: "es",
+      sourceLanguage: "en",
+      sourceIdentifier: "tn",
+      fetch: fetchMock,
+    });
+
+    expect(noOwnerParam).toHaveLength(0);
+
+    const withOwner = await findTargetCatalogEntriesClaimingSource({
+      targetLanguage: "es",
+      sourceLanguage: "en",
+      sourceIdentifier: "tn",
+      sourceCatalogOwner: "unfoldingWord",
+      fetch: fetchMock,
+    });
+
+    expect(withOwner).toHaveLength(1);
+  });
 });

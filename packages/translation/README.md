@@ -2,9 +2,13 @@
 
 **Translation** pipeline concepts: quality checks, progress tracking, and collaboration metadata. Composes `formats` and `door43`.
 
+This package is a **TypeScript library**, not an HTTP API: consumers **`import`** functions and run them in **Node, Deno, Workers, or the browser** (anywhere **`fetch`** reaches Door43). That supports **client-side** catalog/compare flows from the user’s device. A server-only REST layer could wrap these calls later; it is not required to use the library.
+
+Full **signatures and types**: [Translation helps domain API](../../docs/18-translation-helps-domain-api.md).
+
 ## Translation Helps — GL→GL prototype (catalog)
 
-For **source GL vs target GL**, compare which **tc-ready** Translation Helps resources appear in the Door43 catalog for each language. Rows are matched by **`subject` + `identifier`** (resource abbreviation). This is **resource-level** parity only; verse/book coverage inside those repos is not analyzed here.
+For **source GL vs target GL**, compare **tc-ready** catalog rows. Every **accepted** pair is checked against the **target** repo’s **`GET .../catalog/metadata/...`** **`dublin_core.source`**: some entry must list the **source** GL **`language` + resource `identifier`**. Same **`subject` + `identifier`** on both sides only **selects** which target row to inspect; it is not enough if metadata disagrees. A second phase still pairs targets whose abbreviation differs (e.g. **`glt`** ↔ **`ult`**) using the same rule. Rows **without** catalog `owner`/`name`/ref fall back to **exact key** only (no metadata URL). **Resource-level** parity only.
 
 ```ts
 import { compareGlToGlTcReadyTranslationHelps } from "@biblia-studio/translation";
@@ -18,6 +22,23 @@ const result = await compareGlToGlTcReadyTranslationHelps({
 for (const m of result.missingInTarget) {
   console.log("Missing in target:", m.key.subject, m.key.identifier);
 }
+```
+
+### Explicit source list × target language
+
+When you already know which **source** resources to check, use **`compareTcReadySourceResourcesToTarget`**: same catalog key as GL→GL, and when the **target** row has metadata coords you must pass **`sourceLanguage`** so **`dublin_core.source`** can confirm the upstream. **`includeTargetExtras`** fills **`onlyInTarget`** like full GL→GL.
+
+```ts
+import { compareTcReadySourceResourcesToTarget } from "@biblia-studio/translation";
+
+const subset = await compareTcReadySourceResourcesToTarget({
+  sourceResources: [
+    { subject: "TSV Translation Notes", identifier: "tn" },
+    /* or full summaries from listTcReadyTranslationHelpsResources */
+  ],
+  sourceLanguage: "en",
+  targetLanguage: "es",
+});
 ```
 
 ## Book matrix (metadata `projects`, v0)

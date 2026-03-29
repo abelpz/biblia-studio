@@ -19,8 +19,18 @@ export {
   type ListTcReadyHelpsOptions,
 } from "./catalog.js";
 export {
+  fetchDoor43RepoGitTree,
+  type Door43GitTreeEntry,
+  type Door43RepoGitTreePage,
+  type FetchDoor43RepoGitTreeOptions,
+} from "./repo-git-tree.js";
+export {
   buildCatalogMetadataUrl,
+  door43MetadataClaimsUpstreamSource,
+  door43MetadataSourceItemMatchesUpstream,
+  door43MetadataSourceOrgNormalized,
   fetchDoor43CatalogMetadata,
+  normalizeDoor43CatalogOrg,
   parseCatalogMetadata,
   type Door43CatalogDublinCoreSummary,
   type Door43CatalogMetadataResponse,

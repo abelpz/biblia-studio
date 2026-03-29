@@ -5,6 +5,10 @@ export type Door43CatalogMetadataSourceItem = {
   identifier: string;
   language: string;
   version: string;
+  /** When set, upstream is pinned to this publishing org (match catalog search `owner`). */
+  owner?: string;
+  /** Alternative to `owner` in some manifests — same matching rules. */
+  organization?: string;
 };
 
 /** Subset of `dublin_core` returned by **`GET /api/v1/catalog/metadata/{owner}/{repo}/{ref}`**. */
@@ -29,6 +33,75 @@ export type Door43CatalogMetadataResponse = {
   dublin_core: Door43CatalogDublinCoreSummary;
   projects: Door43CatalogProjectRow[];
 };
+
+/** Normalize DCS org / manifest org strings for comparison (trim + lowercase). */
+export function normalizeDoor43CatalogOrg(name: string): string {
+  return name.trim().toLowerCase();
+}
+
+/**
+ * When a **`source`** item includes **`owner`** or **`organization`**, returns that normalized token;
+ * otherwise `undefined` (lineage is identified by language + identifier only).
+ */
+export function door43MetadataSourceOrgNormalized(
+  item: Door43CatalogMetadataSourceItem,
+): string | undefined {
+  const rawOwner = typeof item.owner === "string" ? item.owner.trim() : "";
+  const rawOrg =
+    typeof item.organization === "string" ? item.organization.trim() : "";
+  const raw = rawOwner || rawOrg;
+  return raw ? normalizeDoor43CatalogOrg(raw) : undefined;
+}
+
+/**
+ * True when `item` names this upstream resource: **`language` + `identifier`**, and when the item
+ * pins an org (`owner` / `organization`), **`upstreamCatalogOwner`** must match.
+ */
+export function door43MetadataSourceItemMatchesUpstream(
+  item: Door43CatalogMetadataSourceItem,
+  upstreamLanguage: string,
+  upstreamIdentifier: string,
+  upstreamCatalogOwner: string | undefined,
+): boolean {
+  if (
+    item.language !== upstreamLanguage ||
+    item.identifier !== upstreamIdentifier
+  ) {
+    return false;
+  }
+  const orgHint = door43MetadataSourceOrgNormalized(item);
+  if (!orgHint) return true;
+  if (!upstreamCatalogOwner?.trim()) return false;
+  return normalizeDoor43CatalogOrg(upstreamCatalogOwner) === orgHint;
+}
+
+/**
+ * True when the **target** manifest lists at least one **`dublin_core.source`** entry that
+ * {@link door43MetadataSourceItemMatchesUpstream matches} the given upstream row.
+ */
+export function door43MetadataClaimsUpstreamSource(options: {
+  upstreamLanguage: string;
+  upstreamIdentifier: string;
+  /** Catalog search `owner` for the upstream resource; required when a matching `source` entry specifies org. */
+  upstreamCatalogOwner?: string;
+  metadata: Door43CatalogMetadataResponse;
+}): boolean {
+  const {
+    upstreamLanguage,
+    upstreamIdentifier,
+    upstreamCatalogOwner,
+    metadata,
+  } = options;
+  if (!upstreamLanguage || !upstreamIdentifier) return false;
+  return metadata.dublin_core.source.some((item) =>
+    door43MetadataSourceItemMatchesUpstream(
+      item,
+      upstreamLanguage,
+      upstreamIdentifier,
+      upstreamCatalogOwner,
+    ),
+  );
+}
 
 export type FetchDoor43CatalogMetadataOptions = {
   owner: string;
@@ -130,9 +203,17 @@ function parseSourceArray(raw: unknown): Door43CatalogMetadataSourceItem[] {
     const identifier = stringField(o, "identifier");
     const language = stringField(o, "language");
     const version = stringField(o, "version");
-    if (identifier && language) {
-      out.push({ identifier, language, version });
-    }
+    if (!identifier || !language) continue;
+    const ownerRaw = stringField(o, "owner");
+    const organizationRaw = stringField(o, "organization");
+    const entry: Door43CatalogMetadataSourceItem = {
+      identifier,
+      language,
+      version,
+    };
+    if (ownerRaw) entry.owner = ownerRaw;
+    if (organizationRaw) entry.organization = organizationRaw;
+    out.push(entry);
   }
   return out;
 }
