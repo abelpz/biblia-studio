@@ -1,6 +1,6 @@
 # `@biblia-studio/door43`
 
-HTTP client surfaces and types for **Door43** ([Gitea](https://git.door43.org/)). Follow the [Door43 API developer guide](https://github.com/unfoldingWord/uW-Tools-Collab) and the Machine-readable spec [`swagger.v1.json`](https://git.door43.org/swagger.v1.json) (browse UI: [`/api/swagger`](https://git.door43.org/api/swagger)).
+**TypeScript library** — thin **`fetch`** wrappers and types for **Door43** ([Gitea](https://git.door43.org/)). Intended for **browser or Node** so apps can call Door43 **from the user’s client** without a Biblia Studio HTTP API. Follow the [Door43 API developer guide](https://github.com/unfoldingWord/uW-Tools-Collab) and [`swagger.v1.json`](https://git.door43.org/swagger.v1.json) (browse: [`/api/swagger`](https://git.door43.org/api/swagger)).
 
 ## Public API (no auth)
 
@@ -50,6 +50,6 @@ const allTcReadyForLang = await listTcReadyTranslationHelpsResources({
 
 ## Catalog metadata (`catalogGetMetadata`)
 
-**`GET /api/v1/catalog/metadata/{owner}/{repo}/{ref}`** returns processed manifest fields (`dublin_core`, `projects`). Use `fetchDoor43CatalogMetadata({ owner, repo, ref, fetch? })` or `buildCatalogMetadataUrl` for debugging. **`parseCatalogMetadata`** parses a JSON body (for tests or custom transports).
+**`GET /api/v1/catalog/metadata/{owner}/{repo}/{ref}`** returns processed manifest fields (`dublin_core`, `projects`). Use `fetchDoor43CatalogMetadata({ owner, repo, ref, fetch? })` or `buildCatalogMetadataUrl` for debugging. **`parseCatalogMetadata`** parses a JSON body (for tests or custom transports). **`door43MetadataClaimsUpstreamSource`** checks whether **`dublin_core.source`** names a given upstream **`language` + `identifier`** (used whenever pairing a target repo to a source).
 
 Catalog search summaries from `listTcReadyTranslationHelpsResources` may include **`catalogOwner`**, **`catalogRepo`**, and **`catalogRef`** when the raw **`CatalogEntry`** has **`owner`** and **`name`** — use those with metadata to read **`dublin_core.source`** for source-first pairing (scripture and helps).

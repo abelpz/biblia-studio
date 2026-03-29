@@ -11,7 +11,11 @@ vi.mock("./translation-helps-gl-to-gl.js", async (importOriginal) => {
 
 vi.mock("@biblia-studio/door43", async (importOriginal) => {
   const mod = await importOriginal<typeof import("@biblia-studio/door43")>();
-  return { ...mod, fetchDoor43CatalogMetadata: vi.fn() };
+  return {
+    ...mod,
+    fetchDoor43CatalogMetadata: vi.fn(),
+    fetchDoor43RepoGitTree: vi.fn(),
+  };
 });
 
 const summary = (
@@ -35,9 +39,10 @@ describe("compareGlToGlTcReadyBookProjects", () => {
   beforeEach(() => {
     vi.mocked(glToGl.compareGlToGlTcReadyTranslationHelps).mockReset();
     vi.mocked(door43.fetchDoor43CatalogMetadata).mockReset();
+    vi.mocked(door43.fetchDoor43RepoGitTree).mockReset();
   });
 
-  it("diffs project book ids for each matched pair with catalog coords", async () => {
+  it("diffs manifest project file paths (git blobs) for each matched pair with catalog coords", async () => {
     vi.mocked(glToGl.compareGlToGlTcReadyTranslationHelps).mockResolvedValue({
       sourceLanguage: "en",
       targetLanguage: "es",
@@ -105,6 +110,28 @@ describe("compareGlToGlTcReadyBookProjects", () => {
         };
       },
     );
+    vi.mocked(door43.fetchDoor43RepoGitTree).mockImplementation(
+      async (opts) => {
+        if (opts.repo === "en_tn") {
+          return {
+            tree: [
+              { path: "mat.usfm", type: "blob", sha: "a" },
+              { path: "mrk.usfm", type: "blob", sha: "b" },
+            ],
+            truncated: false,
+            totalCount: 2,
+          };
+        }
+        return {
+          tree: [
+            { path: "mat.usfm", type: "blob", sha: "a" },
+            { path: "luk.usfm", type: "blob", sha: "c" },
+          ],
+          truncated: false,
+          totalCount: 2,
+        };
+      },
+    );
 
     const out = await compareGlToGlTcReadyBookProjects({
       sourceLanguage: "en",
@@ -114,12 +141,13 @@ describe("compareGlToGlTcReadyBookProjects", () => {
     expect(out.matched).toHaveLength(1);
     expect(out.matched[0]).toMatchObject({
       key: { subject: "S", identifier: "tn" },
-      bookIdsInBoth: ["mat"],
-      bookIdsOnlyInSource: ["mrk"],
-      bookIdsOnlyInTarget: ["luk"],
+      pathsInBoth: ["mat.usfm"],
+      pathsOnlyInSource: ["mrk.usfm"],
+      pathsOnlyInTarget: ["luk.usfm"],
     });
     expect(out.skipped).toHaveLength(0);
     expect(door43.fetchDoor43CatalogMetadata).toHaveBeenCalledTimes(2);
+    expect(door43.fetchDoor43RepoGitTree).toHaveBeenCalledTimes(2);
   });
 
   it("skips pairs without catalog coords", async () => {
@@ -154,5 +182,6 @@ describe("compareGlToGlTcReadyBookProjects", () => {
       { key: { subject: "S", identifier: "x" }, reason: "no_catalog_coords" },
     ]);
     expect(door43.fetchDoor43CatalogMetadata).not.toHaveBeenCalled();
+    expect(door43.fetchDoor43RepoGitTree).not.toHaveBeenCalled();
   });
 });

@@ -2,7 +2,9 @@ import { describe, expect, it } from "vitest";
 
 import {
   buildCatalogMetadataUrl,
+  door43MetadataClaimsUpstreamSource,
   fetchDoor43CatalogMetadata,
+  normalizeDoor43CatalogOrg,
   parseCatalogMetadata,
 } from "./catalog-metadata.js";
 
@@ -31,6 +33,80 @@ describe("Door43 catalog metadata", () => {
     ).toBe(
       "https://git.door43.org/api/v1/catalog/metadata/unfoldingWord/es-419_tn/v1",
     );
+  });
+
+  it("door43MetadataClaimsUpstreamSource matches dublin_core.source language+identifier", () => {
+    const metadata = parseCatalogMetadata({
+      dublin_core: {
+        identifier: "glt",
+        subject: "Aligned Bible",
+        version: "v1",
+        source: [{ identifier: "ult", language: "en", version: "v39" }],
+        relation: [],
+      },
+      projects: [],
+    });
+    expect(
+      door43MetadataClaimsUpstreamSource({
+        upstreamLanguage: "en",
+        upstreamIdentifier: "ult",
+        metadata,
+      }),
+    ).toBe(true);
+    expect(
+      door43MetadataClaimsUpstreamSource({
+        upstreamLanguage: "en",
+        upstreamIdentifier: "tn",
+        metadata,
+      }),
+    ).toBe(false);
+  });
+
+  it("door43MetadataClaimsUpstreamSource requires catalog owner when manifest pins org", () => {
+    const metadata = parseCatalogMetadata({
+      dublin_core: {
+        identifier: "glt",
+        subject: "Aligned Bible",
+        version: "v1",
+        source: [
+          {
+            identifier: "ult",
+            language: "en",
+            version: "v1",
+            owner: "unfoldingWord",
+          },
+        ],
+        relation: [],
+      },
+      projects: [],
+    });
+    expect(
+      door43MetadataClaimsUpstreamSource({
+        upstreamLanguage: "en",
+        upstreamIdentifier: "ult",
+        metadata,
+      }),
+    ).toBe(false);
+    expect(
+      door43MetadataClaimsUpstreamSource({
+        upstreamLanguage: "en",
+        upstreamIdentifier: "ult",
+        upstreamCatalogOwner: "unfoldingWord",
+        metadata,
+      }),
+    ).toBe(true);
+    expect(
+      door43MetadataClaimsUpstreamSource({
+        upstreamLanguage: "en",
+        upstreamIdentifier: "ult",
+        upstreamCatalogOwner: "OtherOrg",
+        metadata,
+      }),
+    ).toBe(false);
+  });
+
+  it("normalizeDoor43CatalogOrg is case-insensitive", () => {
+    expect(normalizeDoor43CatalogOrg(" UnfoldingWord ")).toBe("unfoldingword");
   });
 
   it("parseCatalogMetadata maps dublin_core.source and projects", () => {

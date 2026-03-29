@@ -1,5 +1,6 @@
 import {
   fetchDoor43CatalogMetadata,
+  door43MetadataSourceItemMatchesUpstream,
   listTcReadyTranslationHelpsResources,
   type Door43CatalogMetadataResponse,
   type Door43CatalogMetadataSourceItem,
@@ -11,6 +12,11 @@ export type FindTargetCatalogEntriesClaimingSourceOptions = {
   /** Source lineage: catalog `language` + resource `identifier` (e.g. `en` + `tn`). */
   sourceLanguage: string;
   sourceIdentifier: string;
+  /**
+   * Catalog search **`owner`** for the upstream resource. When a manifest **`source`** entry includes
+   * **`owner`** / **`organization`**, it must match this value (normalized).
+   */
+  sourceCatalogOwner?: string;
   /** If set, a `dublin_core.source` item must match this `version` string. */
   sourceVersion?: string;
   organization?: string;
@@ -52,10 +58,15 @@ function sourceItemMatches(
   sourceLanguage: string,
   sourceIdentifier: string,
   sourceVersion: string | undefined,
+  sourceCatalogOwner: string | undefined,
 ): boolean {
   if (
-    item.language !== sourceLanguage ||
-    item.identifier !== sourceIdentifier
+    !door43MetadataSourceItemMatchesUpstream(
+      item,
+      sourceLanguage,
+      sourceIdentifier,
+      sourceCatalogOwner,
+    )
   ) {
     return false;
   }
@@ -68,7 +79,7 @@ function sourceItemMatches(
 /**
  * **Source-first:** list **target** tc-ready catalog rows, fetch **`GET /api/v1/catalog/metadata/...`** for each row
  * that includes **`owner` + `name` + ref**, and return rows whose **`dublin_core.source`** claims the given
- * **`sourceLanguage` + `sourceIdentifier`** (optional **`sourceVersion`**).
+ * **`sourceLanguage` + `sourceIdentifier`** (optional **`sourceVersion`**, **`sourceCatalogOwner`** when manifest pins org).
  *
  * Rows without catalog coordinates are skipped (cannot call metadata). Metadata fetch failures for a row are skipped
  * (no entry in the result).
@@ -111,6 +122,7 @@ export async function findTargetCatalogEntriesClaimingSource(
           options.sourceLanguage,
           options.sourceIdentifier,
           options.sourceVersion,
+          options.sourceCatalogOwner,
         ),
       );
       if (matched.length > 0) {

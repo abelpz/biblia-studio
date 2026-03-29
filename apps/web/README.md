@@ -4,14 +4,16 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 - **`/editor`** — minimal ProseMirror scripture editor (USFM via `formats` + `editing`).
 - **`/translation-helps`** — tc-ready catalog (`lang`, `org`, `limit`); GL→GL `compare`; optional **book matrix** `matrix=1` and `matrixMax` (metadata `projects` book ids per matched resource); **source-first** `srcLang`/`srcId`/`srcVer`; **repo** / **metadata** / **bundle** links when catalog has coords. Port + adapter use `door43` / `translation`.
+- **`/docs/translation-helps-api`** — human-readable **library API** documentation (renders `docs/18-translation-helps-domain-api.md` from the monorepo root when available).
 
 ## Smoke check (local)
 
 1. From repo root: `bunx turbo run dev --filter=web` (or `cd apps/web && bun run dev`).
 2. Open [http://localhost:3000/editor](http://localhost:3000/editor) — you should see the editor, USFM preview, and **Download USFM**.
 3. Open [http://localhost:3000/translation-helps?lang=en](http://localhost:3000/translation-helps?lang=en) — catalog table loads (network to Door43). Source-first: `lang=es&srcLang=en&srcId=tn`. Book matrix (with compare): `lang=en&compare=es&matrix=1&matrixMax=10`.
-4. CI-equivalent: `bun run turbo run build --filter=web` (compiles `/editor` and `/translation-helps`).
-5. Tests: `bun run turbo run test --filter=web` — Vitest for **`translation-helps` driven adapter** (mocked `door43` / `translation`).
+4. Open [http://localhost:3000/docs/translation-helps-api](http://localhost:3000/docs/translation-helps-api) — API docs page (reads `docs/18-translation-helps-domain-api.md` from repo root).
+5. CI-equivalent: `bun run turbo run build --filter=web` (compiles `/editor`, `/translation-helps`, and `/docs/translation-helps-api`).
+6. Tests: `bun run turbo run test --filter=web` — Vitest for **`translation-helps` driven adapter** (mocked `door43` / `translation`).
 
 ## Getting Started
 

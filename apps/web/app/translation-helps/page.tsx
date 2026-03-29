@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createTranslationHelpsAdapter } from "../../src/adapters/driven/translation-helps.adapter";
 import type { TranslationHelpsPort } from "../../src/ports/translation-helps.port";
+import styles from "./page.module.css";
 
 export const dynamic = "force-dynamic";
 
@@ -13,12 +14,17 @@ type Search = {
   limit?: string;
   /** With GL→GL **compare**, set **`1`** to load catalog metadata and diff **`projects`** book ids per matched resource. */
   matrix?: string;
-  /** Max matched pairs for the book matrix (each pair = 2 metadata requests; 1–40, default 15). */
+  /** Max matched pairs for the book matrix (each pair = 2 metadata + 2 git-tree requests; 1–40, default 15). */
   matrixMax?: string;
-  /** Target scan uses **`lang`**. When set with **`srcId`**, rows whose metadata **`dublin_core.source`** matches **`srcLang` + `srcId`** (optional **`srcVer`**) are listed. */
+  /**
+   * Target scan uses **`lang`**. When set with **`srcId`**, rows whose metadata **`dublin_core.source`** matches
+   * **`srcLang` + `srcId`** (optional **`srcVer`**, **`srcOrg`** when the manifest pins upstream org).
+   */
   srcLang?: string;
   srcId?: string;
   srcVer?: string;
+  /** Upstream catalog **`owner`**; required for metadata **`source`** entries that include **`owner`** / **`organization`**. */
+  srcOrg?: string;
 };
 
 function parseLimit(raw: string | undefined): number | undefined {
@@ -87,28 +93,127 @@ export default async function TranslationHelpsPage({
   const srcLang = sp.srcLang?.trim() || undefined;
   const srcId = sp.srcId?.trim() || undefined;
   const srcVer = sp.srcVer?.trim() || undefined;
+  const srcOrg = sp.srcOrg?.trim() || undefined;
   const sourceFirstMode = Boolean(
     srcLang && srcLang.length > 0 && srcId && srcId.length > 0,
   );
+  const compareTarget =
+    compareLang && compareLang.length > 0 && compareLang !== lang
+      ? compareLang
+      : undefined;
+  const compareActive = compareTarget !== undefined;
 
   const port = createTranslationHelpsAdapter();
 
   return (
-    <main style={{ padding: "1.5rem", maxWidth: "52rem" }}>
-      <h1 style={{ fontSize: "1.25rem", marginBottom: "0.5rem" }}>
-        Translation Helps — tc-ready catalog
-      </h1>
-      <p style={{ marginBottom: "1rem", color: "#444", fontSize: "0.95rem" }}>
-        Read-only data from Door43{" "}
-        <code style={{ fontSize: "0.85em" }}>GET /api/v1/catalog/search</code> (
-        <code>topic=tc-ready</code>). GL→GL comparison matches{" "}
-        <code>subject</code> + <code>identifier</code> only.{" "}
-        <strong>Source-first</strong> filters targets whose metadata claims a
-        source lineage via <code>srcLang</code>, <code>srcId</code>, optional{" "}
-        <code>srcVer</code> (see form below). With GL→GL compare, optional{" "}
-        <strong>Book matrix</strong> diffs <code>manifest.projects</code> book
-        ids from catalog metadata per matched resource (metadata-heavy).
+    <main className={styles.main}>
+      <h1 className={styles.title}>Translation helps</h1>
+      <p className={styles.subtitle}>
+        Resources for Bible translation teams—notes, questions, word lists, and
+        similar helps—from the public{" "}
+        <a href="https://door43.org" {...extLink}>
+          Door43
+        </a>{" "}
+        catalog. Nothing here is edited in Biblia Studio; this page only lists
+        and compares what is already published.
       </p>
+
+      <section className={styles.introBox} aria-labelledby="whats-on-page">
+        <h2 id="whats-on-page" className={styles.introBoxTitle}>
+          What you&apos;re seeing on this page
+        </h2>
+        {compareActive ? (
+          <>
+            <p>
+              You asked for a <strong>side-by-side check</strong> between{" "}
+              <strong>{lang}</strong> and <strong>{compareLang}</strong>. We
+              find resources that look like the <em>same kind</em> of help in
+              both languages (same catalog identifier and subject).{" "}
+              <strong>Matched</strong> has both sides; the other sections list
+              helps that only exist on one side.
+            </p>
+            {sp.matrix === "1" ? (
+              <p>
+                <strong>Book matrix</strong> is on: for each matched pair we
+                load catalog metadata and recursive <strong>git trees</strong>,
+                then diff <strong>file paths</strong> under each manifest&apos;s{" "}
+                <code>projects</code> folders (so Translation Words / Academy
+                compare real blobs, not only matching directory names). Extra
+                network per pair.
+              </p>
+            ) : null}
+          </>
+        ) : sourceFirstMode && srcLang && srcId ? (
+          <p>
+            You&apos;re filtering <strong>{lang}</strong> resources that{" "}
+            <strong>say in metadata</strong> they come from a specific source:{" "}
+            <strong>
+              {srcLang}/{srcId}
+              {srcVer ? `@${srcVer}` : ""}
+              {srcOrg ? ` · org ${srcOrg}` : ""}
+            </strong>
+            . That is useful when you want &ldquo;everything in this language
+            that claims this upstream.&rdquo;
+          </p>
+        ) : (
+          <>
+            <p>
+              You&apos;re browsing <strong>{lang}</strong> entries tagged{" "}
+              <strong>translation-ready</strong> (&ldquo;tc-ready&rdquo;) so
+              they show up in translation tools.{" "}
+              <strong>Each row is one published resource</strong> (for example
+              translation notes or questions).
+            </p>
+            <p>
+              Use <strong>Language</strong> below to switch the list; add{" "}
+              <strong>Compare GL</strong> with another language code to see
+              matches and gaps between two languages.
+            </p>
+            <ul>
+              <li>
+                <strong>ID</strong> — short catalog name (e.g.{" "}
+                <code style={{ fontSize: "0.9em" }}>tn</code> for translation
+                notes)
+              </li>
+              <li>
+                <strong>Subject</strong> — kind of content
+              </li>
+              <li>
+                <strong>Title</strong> — readable name
+              </li>
+              <li>
+                <strong>Version</strong> — published release
+              </li>
+              <li>
+                <strong>Door43</strong> — open the Git repo, catalog metadata,
+                or a bundle download when links exist
+              </li>
+            </ul>
+          </>
+        )}
+      </section>
+
+      <details className={styles.technical}>
+        <summary>Technical details (API &amp; parameters)</summary>
+        <div>
+          <p>
+            Read-only data from Door43{" "}
+            <code style={{ fontSize: "0.85em" }}>
+              GET /api/v1/catalog/search
+            </code>{" "}
+            with <code>topic=tc-ready</code>. GL→GL comparison matches{" "}
+            <code>subject</code> and <code>identifier</code> only.{" "}
+            <strong>Source-first</strong> uses rows whose metadata{" "}
+            <code>dublin_core.source</code> matches <code>srcLang</code>,{" "}
+            <code>srcId</code>, optional <code>srcVer</code>, and optional{" "}
+            <code>srcOrg</code> when metadata pins <code>owner</code>/
+            <code>organization</code>. <strong>Book matrix</strong> diffs repo{" "}
+            <strong>blob paths</strong> under each side&apos;s{" "}
+            <code>manifest.projects[].path</code> roots using metadata +{" "}
+            <code>git/trees?recursive=true</code> (extra requests per pair).
+          </p>
+        </div>
+      </details>
 
       <form
         method="GET"
@@ -235,6 +340,20 @@ export default async function TranslationHelpsPage({
         <label
           style={{ display: "flex", flexDirection: "column", gap: "0.2rem" }}
         >
+          <span style={{ fontSize: "0.75rem", color: "#555" }}>
+            Source org (opt.)
+          </span>
+          <input
+            name="srcOrg"
+            defaultValue={srcOrg ?? ""}
+            placeholder="unfoldingWord"
+            title="Upstream catalog owner when metadata source lists owner/organization"
+            style={{ width: "8rem", padding: "0.35rem" }}
+          />
+        </label>
+        <label
+          style={{ display: "flex", flexDirection: "column", gap: "0.2rem" }}
+        >
           <span style={{ fontSize: "0.75rem", color: "#555" }}>Limit</span>
           <input
             name="limit"
@@ -247,12 +366,12 @@ export default async function TranslationHelpsPage({
         </button>
       </form>
 
-      {compareLang && compareLang !== lang ? (
+      {compareActive ? (
         <>
           <CompareSection
             port={port}
             sourceLanguage={lang}
-            targetLanguage={compareLang}
+            targetLanguage={compareTarget}
             organization={org}
             limit={limit}
           />
@@ -260,7 +379,7 @@ export default async function TranslationHelpsPage({
             <BookMatrixSection
               port={port}
               sourceLanguage={lang}
-              targetLanguage={compareLang}
+              targetLanguage={compareTarget}
               organization={org}
               limit={limit}
               matrixMatchedLimit={parseMatrixMatchedLimit(sp.matrixMax)}
@@ -273,6 +392,7 @@ export default async function TranslationHelpsPage({
           targetLanguage={lang}
           sourceLanguage={srcLang}
           sourceIdentifier={srcId}
+          sourceCatalogOwner={srcOrg && srcOrg.length > 0 ? srcOrg : undefined}
           sourceVersion={srcVer && srcVer.length > 0 ? srcVer : undefined}
           organization={org}
           limit={limit}
@@ -315,11 +435,13 @@ async function CatalogSection({
   return (
     <>
       <h2 style={{ fontSize: "1.05rem", marginBottom: "0.5rem" }}>
-        Catalog — {language}
-        {organization ? ` · ${organization}` : ""}
+        Resources in this list — {language}
+        {organization ? ` · org: ${organization}` : ""}
       </h2>
-      <p style={{ marginBottom: "0.75rem", fontSize: "0.9rem", color: "#333" }}>
-        {rows.length} row{rows.length === 1 ? "" : "s"}
+      <p className={styles.tableLead}>
+        <strong>{rows.length}</strong> resource
+        {rows.length === 1 ? "" : "s"} (capped by <strong>Limit</strong> in the
+        form above). Scroll horizontally on small screens if the table is wide.
       </p>
       <div style={{ overflowX: "auto" }}>
         <table
@@ -390,6 +512,7 @@ async function SourceFirstSection({
   targetLanguage,
   sourceLanguage,
   sourceIdentifier,
+  sourceCatalogOwner,
   sourceVersion,
   organization,
   limit,
@@ -398,6 +521,7 @@ async function SourceFirstSection({
   targetLanguage: string;
   sourceLanguage: string;
   sourceIdentifier: string;
+  sourceCatalogOwner?: string;
   sourceVersion?: string;
   organization?: string;
   limit?: number;
@@ -406,6 +530,7 @@ async function SourceFirstSection({
     targetLanguage,
     sourceLanguage,
     sourceIdentifier,
+    sourceCatalogOwner,
     sourceVersion,
     organization,
     limit,
@@ -413,17 +538,18 @@ async function SourceFirstSection({
 
   const claimSummary = `${sourceLanguage}/${sourceIdentifier}${
     sourceVersion ? `@${sourceVersion}` : ""
-  }`;
+  }${sourceCatalogOwner ? ` · org:${sourceCatalogOwner}` : ""}`;
 
   return (
     <>
       <h2 style={{ fontSize: "1.05rem", marginBottom: "0.5rem" }}>
-        Source-first — targets in <strong>{targetLanguage}</strong> claiming{" "}
-        <code style={{ fontSize: "0.95em" }}>{claimSummary}</code>
+        Resources claiming this source — {targetLanguage}
       </h2>
-      <p style={{ marginBottom: "0.75rem", fontSize: "0.9rem", color: "#333" }}>
-        {rows.length} match{rows.length === 1 ? "" : "es"} (metadata scan;
-        capped by limit)
+      <p className={styles.tableLead}>
+        Filter: metadata says source is{" "}
+        <code style={{ fontSize: "0.95em" }}>{claimSummary}</code>.{" "}
+        <strong>{rows.length}</strong> match{rows.length === 1 ? "" : "es"}{" "}
+        (scan capped by your limit).
       </p>
       <div style={{ overflowX: "auto" }}>
         <table
@@ -527,16 +653,21 @@ async function BookMatrixSection({
           marginBottom: "0.5rem",
         }}
       >
-        Book matrix — manifest <code>projects</code> ({book.sourceLanguage}↔
+        Manifest files in each matched pair ({book.sourceLanguage} ↔{" "}
         {book.targetLanguage})
       </h2>
       <p
         style={{ marginBottom: "0.75rem", fontSize: "0.88rem", color: "#444" }}
       >
-        Per <strong>matched</strong> tc-ready resource, book ids from catalog
-        metadata (RC manifest). Cap: <strong>{matrixMatchedLimit}</strong> pairs
-        · loaded <strong>{book.rows.length}</strong> · skipped{" "}
-        <strong>{book.skipped.length}</strong>.
+        For up to <strong>{matrixMatchedLimit}</strong> matched resources we
+        loaded catalog metadata and <strong>recursive git trees</strong>, then
+        compared which <strong>blob paths</strong> fall under each side&apos;s
+        manifest <code>projects[].path</code> roots (so Translation Words /
+        Academy entries compare actual files, not only shared folder names).{" "}
+        <strong>{book.rows.length}</strong> pair
+        {book.rows.length === 1 ? "" : "s"} loaded;{" "}
+        <strong>{book.skipped.length}</strong> skipped (missing coords or fetch
+        errors—see list below if any).
       </p>
       {book.skipped.length > 0 ? (
         <ul
@@ -598,22 +729,20 @@ async function BookMatrixSection({
                 <td
                   style={{ padding: "0.35rem 0.45rem", verticalAlign: "top" }}
                 >
-                  {r.bookIdsInBoth.length > 0
-                    ? r.bookIdsInBoth.join(", ")
+                  {r.pathsInBoth.length > 0 ? r.pathsInBoth.join(", ") : "—"}
+                </td>
+                <td
+                  style={{ padding: "0.35rem 0.45rem", verticalAlign: "top" }}
+                >
+                  {r.pathsOnlyInSource.length > 0
+                    ? r.pathsOnlyInSource.join(", ")
                     : "—"}
                 </td>
                 <td
                   style={{ padding: "0.35rem 0.45rem", verticalAlign: "top" }}
                 >
-                  {r.bookIdsOnlyInSource.length > 0
-                    ? r.bookIdsOnlyInSource.join(", ")
-                    : "—"}
-                </td>
-                <td
-                  style={{ padding: "0.35rem 0.45rem", verticalAlign: "top" }}
-                >
-                  {r.bookIdsOnlyInTarget.length > 0
-                    ? r.bookIdsOnlyInTarget.join(", ")
+                  {r.pathsOnlyInTarget.length > 0
+                    ? r.pathsOnlyInTarget.join(", ")
                     : "—"}
                 </td>
               </tr>
@@ -648,12 +777,13 @@ async function CompareSection({
   return (
     <>
       <h2 style={{ fontSize: "1.05rem", marginBottom: "0.5rem" }}>
-        GL→GL — {summary.sourceLanguage} vs {summary.targetLanguage}
+        Compare — {summary.sourceLanguage} and {summary.targetLanguage}
       </h2>
       <p style={{ marginBottom: "1rem", fontSize: "0.9rem", color: "#333" }}>
-        Matched: {summary.matched.length} · Missing in target:{" "}
-        {summary.missingInTarget.length} · Only in target:{" "}
-        {summary.onlyInTarget.length}
+        <strong>{summary.matched.length}</strong> matched (same kind of help in
+        both), <strong>{summary.missingInTarget.length}</strong> only in{" "}
+        {summary.sourceLanguage}, <strong>{summary.onlyInTarget.length}</strong>{" "}
+        only in {summary.targetLanguage}.
       </p>
 
       {summary.matched.length > 0 ? (

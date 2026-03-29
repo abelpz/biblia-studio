@@ -12,6 +12,7 @@ vi.mock("@biblia-studio/door43", async (importOriginal) => {
 vi.mock("@biblia-studio/translation", () => ({
   compareGlToGlTcReadyTranslationHelps: vi.fn(),
   compareGlToGlTcReadyBookProjects: vi.fn(),
+  compareTcReadySourceResourcesToTarget: vi.fn(),
   findTargetCatalogEntriesClaimingSource: vi.fn(),
 }));
 
@@ -19,6 +20,7 @@ import { listTcReadyTranslationHelpsResources } from "@biblia-studio/door43";
 import {
   compareGlToGlTcReadyBookProjects,
   compareGlToGlTcReadyTranslationHelps,
+  compareTcReadySourceResourcesToTarget,
   findTargetCatalogEntriesClaimingSource,
 } from "@biblia-studio/translation";
 
@@ -117,6 +119,49 @@ describe("createTranslationHelpsAdapter", () => {
     expect(out.matched[0]?.targetDoor43BundleUrl).toBe("https://ex/es.zip");
   });
 
+  it("compareTcReadySourceResourcesToTarget forwards mapped inputs", async () => {
+    vi.mocked(compareTcReadySourceResourcesToTarget).mockResolvedValue({
+      sourceLanguage: "en",
+      targetLanguage: "es",
+      matched: [],
+      missingInTarget: [],
+      onlyInTarget: [],
+    });
+    const adapter = createTranslationHelpsAdapter();
+    await adapter.compareTcReadySourceResourcesToTarget({
+      sourceResources: [
+        { subject: "S", identifier: "tn" },
+        {
+          subject: "S",
+          identifier: "tq",
+          title: "T",
+          version: "v1",
+          door43BundleUrl: "https://b.zip",
+        },
+      ],
+      targetLanguage: "es",
+      sourceLanguage: "en",
+      limit: 100,
+      includeTargetExtras: true,
+    });
+    expect(compareTcReadySourceResourcesToTarget).toHaveBeenCalledWith(
+      expect.objectContaining({
+        targetLanguage: "es",
+        sourceLanguage: "en",
+        limit: 100,
+        includeTargetExtras: true,
+        sourceResources: [
+          { subject: "S", identifier: "tn" },
+          expect.objectContaining({
+            identifier: "tq",
+            title: "T",
+            bundleUrl: "https://b.zip",
+          }),
+        ],
+      }),
+    );
+  });
+
   it("findTargetsClaimingSource forwards args and maps slim rows", async () => {
     vi.mocked(findTargetCatalogEntriesClaimingSource).mockResolvedValue([
       {
@@ -175,9 +220,9 @@ describe("createTranslationHelpsAdapter", () => {
           key: { subject: "S", identifier: "tn" },
           sourceTitle: "A",
           targetTitle: "B",
-          bookIdsInBoth: ["mat"],
-          bookIdsOnlyInSource: ["mrk"],
-          bookIdsOnlyInTarget: ["luk"],
+          pathsInBoth: ["mat.usfm"],
+          pathsOnlyInSource: ["mrk.usfm"],
+          pathsOnlyInTarget: ["luk.usfm"],
         },
       ],
       skipped: [
@@ -194,7 +239,7 @@ describe("createTranslationHelpsAdapter", () => {
       matrixMatchedLimit: 12,
     });
     expect(out.rows).toHaveLength(1);
-    expect(out.rows[0]?.bookIdsInBoth).toEqual(["mat"]);
+    expect(out.rows[0]?.pathsInBoth).toEqual(["mat.usfm"]);
     expect(out.skipped[0]?.reason).toBe("no_catalog_coords");
     expect(compareGlToGlTcReadyBookProjects).toHaveBeenCalledWith(
       expect.objectContaining({

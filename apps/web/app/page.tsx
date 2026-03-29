@@ -1,82 +1,72 @@
-import Image, { type ImageProps } from "next/image";
-import { Button } from "@repo/ui/button";
+import Link from "next/link";
 import styles from "./page.module.css";
 
-type Props = Omit<ImageProps, "src"> & {
-  srcLight: string;
-  srcDark: string;
-};
-
-const ThemeImage = (props: Props) => {
-  const { srcLight, srcDark, ...rest } = props;
-
-  return (
-    <>
-      <Image {...rest} src={srcLight} className="imgLight" />
-      <Image {...rest} src={srcDark} className="imgDark" />
-    </>
-  );
-};
+const TRANSLATION_HELPS = "/translation-helps?lang=en";
+const TRANSLATION_HELPS_MATRIX =
+  "/translation-helps?lang=en&compare=es&matrix=1&matrixMax=10";
 
 export default function Home() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <ThemeImage
-          className={styles.logo}
-          srcLight="turborepo-dark.svg"
-          srcDark="turborepo-light.svg"
-          alt="Turborepo logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>apps/web/app/page.tsx</code>
-          </li>
-          <li>Save and see your changes instantly.</li>
-          <li>
-            <a href="/door43">Door43 — public repo search (M1)</a>
-          </li>
-          <li>
-            <a href="/translation-helps">
-              Translation Helps — tc-ready catalog (M4)
-            </a>
-          </li>
-          <li>
-            <a href="/editor">Scripture editor — USFM WYSIWYG (M2)</a>
-          </li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new/clone?demo-description=Learn+to+implement+a+monorepo+with+a+two+Next.js+sites+that+has+installed+three+local+packages.&demo-image=%2F%2Fimages.ctfassets.net%2Fe5382hct74si%2F4K8ZISWAzJ8X1504ca0zmC%2F0b21a1c6246add355e55816278ef54bc%2FBasic.png&demo-title=Monorepo+with+Turborepo&demo-url=https%3A%2F%2Fexamples-basic-web.vercel.sh%2F&from=templates&project-name=Monorepo+with+Turborepo&repository-name=monorepo-turborepo&repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fturborepo%2Ftree%2Fmain%2Fexamples%2Fbasic&root-directory=apps%2Fdocs&skippable-integrations=1&teamSlug=vercel&utm_source=create-turbo"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://turborepo.dev/docs?utm_source"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+        <div className={styles.hero}>
+          <h1 className={styles.appTitle}>Biblia Studio</h1>
+          <p className={styles.appLead}>
+            Open a tool below. Same routes work from any browser tab (bookmark
+            or share the URL).
+          </p>
         </div>
-        <Button appName="web" className={styles.secondary}>
-          Open alert
-        </Button>
+
+        <nav className={styles.appNav} aria-label="App pages">
+          <ul className={styles.appNavList}>
+            <li className={styles.appNavItem}>
+              <Link href="/door43" className={styles.appNavLink}>
+                Door43
+              </Link>
+              <p className={styles.appNavDesc}>
+                Search and open public scripture repositories (read-only).
+              </p>
+            </li>
+            <li className={styles.appNavItem}>
+              <Link href={TRANSLATION_HELPS} className={styles.appNavLink}>
+                Translation helps
+              </Link>
+              <p className={styles.appNavDesc}>
+                tc-ready catalog, optional GL→GL compare, source-first filters,
+                repo and metadata links.
+              </p>
+              <p className={styles.appNavExamples}>
+                <Link
+                  href={TRANSLATION_HELPS_MATRIX}
+                  className={styles.appNavSubLink}
+                >
+                  Try book matrix (English × Spanish sample)
+                </Link>
+              </p>
+            </li>
+            <li className={styles.appNavItem}>
+              <Link href="/editor" className={styles.appNavLink}>
+                Scripture editor
+              </Link>
+              <p className={styles.appNavDesc}>
+                WYSIWYG USFM in the browser (ProseMirror).
+              </p>
+            </li>
+            <li className={styles.appNavItem}>
+              <Link
+                href="/docs/translation-helps-api"
+                className={styles.appNavLink}
+              >
+                Translation helps — library API
+              </Link>
+              <p className={styles.appNavDesc}>
+                Docs for <code>@biblia-studio/door43</code> and{" "}
+                <code>@biblia-studio/translation</code> (client-side TypeScript
+                API).
+              </p>
+            </li>
+          </ul>
+        </nav>
       </main>
       <footer className={styles.footer}>
         <a
@@ -84,13 +74,6 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
           Examples
         </a>
         <a
@@ -98,13 +81,6 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
           Go to turborepo.dev →
         </a>
       </footer>

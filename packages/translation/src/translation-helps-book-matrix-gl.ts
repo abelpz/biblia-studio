@@ -1,6 +1,9 @@
 import {
   fetchDoor43CatalogMetadata,
+  fetchDoor43RepoGitTree,
+  type Door43CatalogMetadataResponse,
   type Door43CatalogResourceSummary,
+  type Door43RepoGitTreePage,
 } from "@biblia-studio/door43";
 import {
   compareGlToGlTcReadyTranslationHelps,
@@ -13,11 +16,11 @@ import {
 export type CompareGlToGlTcReadyBookProjectsOptions =
   CompareGlToGlTcReadyHelpsOptions & {
     /**
-     * Max **matched** catalog pairs to load metadata for (each pair = two metadata calls).
+     * Max **matched** catalog pairs to load metadata for (each pair = two metadata calls + two git tree calls).
      * @default 15
      */
     matchedMetadataLimit?: number;
-    /** Max concurrent metadata requests (default 6). */
+    /** Max concurrent pair batches (default 6). */
     concurrency?: number;
   };
 
@@ -25,12 +28,13 @@ export type MatchedTcReadyBookProjectCoverage = {
   key: TranslationHelpsResourceKey;
   sourceTitle: string;
   targetTitle: string;
-  /** Book ids present in **both** manifests (`projects[].identifier`), sorted. */
-  bookIdsInBoth: string[];
-  /** Book ids only on **source** metadata. */
-  bookIdsOnlyInSource: string[];
-  /** Book ids only on **target** metadata. */
-  bookIdsOnlyInTarget: string[];
+  /**
+   * Repo **blob** paths under each manifest **`projects[].path`** root, present in **both** repos
+   * (Translation Academy / Words: every markdown file; scripture helps: e.g. `mat.usfm`).
+   */
+  pathsInBoth: string[];
+  pathsOnlyInSource: string[];
+  pathsOnlyInTarget: string[];
 };
 
 export type SkippedTcReadyBookProjectRow = {
@@ -39,9 +43,9 @@ export type SkippedTcReadyBookProjectRow = {
 };
 
 /**
- * For each **matched** tc-ready row (same `subject` + `identifier` in both GLs), fetch Door43 catalog
- * **metadata** for **source** and **target** and diff **`projects`** book identifiers — a minimal **book × resource**
- * slice (one row per matched *resource*, book lists show scripture/book coverage declared in the RC manifest).
+ * For each **matched** tc-ready row from {@link compareGlToGlTcReadyTranslationHelps} (exact key and/or
+ * target-metadata lineage), fetch Door43 catalog **metadata** plus **recursive git trees** for source and target,
+ * then diff **blob paths** that fall under manifest **`projects[].path`** roots (not only top-level project ids).
  */
 export type GlToGlTcReadyBookProjectsResult = {
   sourceLanguage: string;
@@ -68,32 +72,64 @@ function refForMetadata(row: Door43CatalogResourceSummary): string | undefined {
   return row.version.length > 0 ? row.version : undefined;
 }
 
-function bookIdsFromProjects(metadata: {
-  projects: { identifier: string }[];
-}): string[] {
-  const ids = metadata.projects
-    .map((p) => p.identifier)
-    .filter((id) => id.length > 0);
-  return [...new Set(ids)].sort((a, b) => a.localeCompare(b));
+function normalizedManifestPath(path: string): string {
+  return path.trim().replace(/^\.\//, "").replace(/\\/g, "/");
 }
 
-function diffBookSets(sourceIds: string[], targetIds: string[]) {
-  const s = new Set(sourceIds);
-  const t = new Set(targetIds);
+function blobBelongsToManifestRoots(
+  blobPath: string,
+  roots: string[],
+): boolean {
+  const p = blobPath.replace(/\\/g, "/");
+  for (const root of roots) {
+    if (!root) continue;
+    if (p === root || p.startsWith(`${root}/`)) return true;
+  }
+  return false;
+}
+
+function manifestProjectRoots(
+  metadata: Door43CatalogMetadataResponse,
+): string[] {
+  const roots: string[] = [];
+  for (const proj of metadata.projects) {
+    const r = normalizedManifestPath(proj.path);
+    if (r) roots.push(r);
+  }
+  return [...new Set(roots)];
+}
+
+function sortedBlobPathsUnderRoots(
+  tree: Door43RepoGitTreePage,
+  roots: string[],
+): string[] {
+  if (roots.length === 0) return [];
+  const out: string[] = [];
+  for (const e of tree.tree) {
+    if (e.type !== "blob") continue;
+    if (!blobBelongsToManifestRoots(e.path, roots)) continue;
+    out.push(e.path.replace(/\\/g, "/"));
+  }
+  return [...new Set(out)].sort((a, b) => a.localeCompare(b));
+}
+
+function diffPathSets(sourcePaths: string[], targetPaths: string[]) {
+  const s = new Set(sourcePaths);
+  const t = new Set(targetPaths);
   const inBoth: string[] = [];
   const onlyInSource: string[] = [];
   const onlyInTarget: string[] = [];
-  for (const id of sourceIds) {
+  for (const id of sourcePaths) {
     if (t.has(id)) inBoth.push(id);
     else onlyInSource.push(id);
   }
-  for (const id of targetIds) {
+  for (const id of targetPaths) {
     if (!s.has(id)) onlyInTarget.push(id);
   }
   return {
-    bookIdsInBoth: inBoth.sort((a, b) => a.localeCompare(b)),
-    bookIdsOnlyInSource: onlyInSource.sort((a, b) => a.localeCompare(b)),
-    bookIdsOnlyInTarget: onlyInTarget.sort((a, b) => a.localeCompare(b)),
+    pathsInBoth: inBoth.sort((a, b) => a.localeCompare(b)),
+    pathsOnlyInSource: onlyInSource.sort((a, b) => a.localeCompare(b)),
+    pathsOnlyInTarget: onlyInTarget.sort((a, b) => a.localeCompare(b)),
   };
 }
 
@@ -110,7 +146,7 @@ async function coverageForPair(
   const sRef = refForMetadata(m.source)!;
   const tRef = refForMetadata(m.target)!;
   try {
-    const [metaS, metaT] = await Promise.all([
+    const [metaS, metaT, treeS, treeT] = await Promise.all([
       fetchDoor43CatalogMetadata({
         owner: m.source.catalogOwner!,
         repo: m.source.catalogRepo!,
@@ -123,10 +159,24 @@ async function coverageForPair(
         ref: tRef,
         fetch: fetchFn,
       }),
+      fetchDoor43RepoGitTree({
+        owner: m.source.catalogOwner!,
+        repo: m.source.catalogRepo!,
+        ref: sRef,
+        fetch: fetchFn,
+      }),
+      fetchDoor43RepoGitTree({
+        owner: m.target.catalogOwner!,
+        repo: m.target.catalogRepo!,
+        ref: tRef,
+        fetch: fetchFn,
+      }),
     ]);
-    const sb = bookIdsFromProjects(metaS);
-    const tb = bookIdsFromProjects(metaT);
-    const d = diffBookSets(sb, tb);
+    const rootsS = manifestProjectRoots(metaS);
+    const rootsT = manifestProjectRoots(metaT);
+    const pathsS = sortedBlobPathsUnderRoots(treeS, rootsS);
+    const pathsT = sortedBlobPathsUnderRoots(treeT, rootsT);
+    const d = diffPathSets(pathsS, pathsT);
     return {
       ok: true,
       value: {
