@@ -1,14 +1,14 @@
 # AI agents and human review
 
-Biblia Studio is built primarily by **AI coding agents**, with **humans** responsible for direction, review, and merge decisions. This doc aligns expectations and reduces repeated mistakes.
+Biblia Studio is built primarily by **AI coding agents**, with **humans** as **guides**—direction, priorities, and review. Agents are expected to **run** delivery they can automate (git, checks, GitHub MCP) instead of handing the human a todo list unless the human asked for instructions only. Merge and other **irreversible** steps follow [`AGENTS.md` § GitHub delivery](../AGENTS.md#github-delivery). This doc aligns expectations and reduces repeated mistakes.
 
 ## Roles
 
-| Role                 | Responsibility                                                                                                           |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| **Agent**            | Implement scoped tasks; follow [`AGENTS.md`](../AGENTS.md) and architecture docs; run checks; document assumptions.      |
-| **Human reviewer**   | Validate product fit, security, architecture boundaries, dependency risk, and accessibility; approve or request changes. |
-| **Human maintainer** | Own roadmap, credentials, releases, and escalation when agents hit policy limits.                                        |
+| Role                 | Responsibility                                                                                                                                                                                                                                    |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Agent**            | Implement scoped tasks; follow [`AGENTS.md`](../AGENTS.md) and architecture docs; run checks; execute git/GitHub steps when appropriate; **ask** before scope expansion, merge, or destructive actions unless the thread already said to proceed. |
+| **Human (guide)**    | Set direction and boundaries; review product fit, security, architecture, dependencies, a11y; answer **should I proceed?** when agents hit decision points. Not the default “runner” for mechanical steps agents can do.                          |
+| **Human maintainer** | Own roadmap, credentials, releases, and escalation when agents hit policy limits.                                                                                                                                                                 |
 
 ## What agents must do
 
@@ -20,8 +20,9 @@ Biblia Studio is built primarily by **AI coding agents**, with **humans** respon
 6. **Surface uncertainty** — explicit questions for humans when requirements conflict with docs or common sense.
 7. **Close out each step** — Before pausing or moving on, run the [**closure checklist** in `AGENTS.md`](../AGENTS.md#after-each-step-closure-checklist): update package map, READMEs, workflow docs, PR/issue links, and ADRs that the step touched — not only code.
 8. **Stay aligned with milestones** — Restate issue + milestone; add an **Alignment** block (on track / at risk); **escalate** on scope drift per [Milestones & scope](./13-milestones-and-scope.md).
+9. **Close substantive replies with Done / Next** — per [`AGENTS.md` § Human partnership](../AGENTS.md#human-partnership-reports-and-ownership).
 
-## What human reviewers should verify
+## What human reviewers (guide) should verify
 
 - [ ] **Security** — No secrets in repo; env vars only; safe handling of auth tokens and user content.
 - [ ] **Data & scripture integrity** — Parsing, merging, or publishing paths do not silently corrupt or drop content; edge cases called out.
@@ -56,7 +57,7 @@ Biblia Studio is built primarily by **AI coding agents**, with **humans** respon
 
 ## Communication norms
 
-- Agents: end summaries with **what changed** (including **docs and config**), **commands run**, and **risks / follow-ups**. If a [closure checklist](../AGENTS.md#after-each-step-closure-checklist) row was N/A, say so briefly.
+- Agents: end every **substantive** message with **Done** / **Next** per [`AGENTS.md` § Human partnership](../AGENTS.md#human-partnership-reports-and-ownership). In the body, include **what changed** (including **docs and config**), **commands run**, and **risks / follow-ups**. If a [closure checklist](../AGENTS.md#after-each-step-closure-checklist) row was N/A, say so briefly.
 - Humans: prefer **concrete** change requests (file + intent) over generic “make it better.”
 
 ## Related

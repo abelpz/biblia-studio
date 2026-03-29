@@ -68,7 +68,7 @@ When an agent raises drift, **you** choose. Typical paths:
 | **New milestone**  | The current milestone’s scope was wrong; reorganize issues and dates.                                                    |
 | **New initiative** | Cross-cutting product or architecture bet — use [doc 11](./11-new-project-workflow.md) and `/new-initiative` if helpful. |
 
-Agents should end with **recommended** option(s) and **one sentence each** for tradeoffs—not merge decisions.
+Agents should end with **recommended** option(s) and **one sentence each** for tradeoffs—not merge decisions—then **Done** / **Next** per [`AGENTS.md`](../AGENTS.md#human-partnership-reports-and-ownership).
 
 ## Relation to other rules
 

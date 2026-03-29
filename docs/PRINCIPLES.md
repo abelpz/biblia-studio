@@ -21,14 +21,14 @@
 
 ## Process & safety
 
-| Principle         | Detail                                                                                                                                                                    |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Small diffs**   | One coherent change; no drive-by refactors — [AGENTS.md](../AGENTS.md).                                                                                                   |
-| **CI is the bar** | Same checks locally as [CI workflow](../.github/workflows/ci.yml): `lint`, `check-types`, `test`, `build`.                                                                |
-| **Secrets**       | Never commit tokens; env vars only — [GitHub MCP](./07-github-mcp.md), [security](../SECURITY.md).                                                                        |
-| **Human + agent** | Humans approve boundaries and merge; agents follow [workflow automation](./12-workflow-automation.md) (`/new-initiative`, issue/PR reminders).                            |
-| **Step closure**  | After **each** step: update every doc, README, issue/PR, and ADR that step invalidated — [AGENTS.md](../AGENTS.md#after-each-step-closure-checklist).                     |
-| **Milestones**    | Issues tie to a **milestone** when part of the roadmap; agents give **Alignment** updates and **escalate** on drift — [milestones & scope](./13-milestones-and-scope.md). |
+| Principle         | Detail                                                                                                                                                                                                                                                                       |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Small diffs**   | One coherent change; no drive-by refactors — [AGENTS.md](../AGENTS.md).                                                                                                                                                                                                      |
+| **CI is the bar** | Same checks locally as [CI workflow](../.github/workflows/ci.yml): `lint`, `check-types`, `test`, `build`.                                                                                                                                                                   |
+| **Secrets**       | Never commit tokens; env vars only — [GitHub MCP](./07-github-mcp.md), [security](../SECURITY.md).                                                                                                                                                                           |
+| **Human + agent** | Humans **guide** (boundaries, review); agents **execute** delivery they can automate and **ask** before irreversible steps; merge per [AGENTS.md](../AGENTS.md#github-delivery). [Workflow automation](./12-workflow-automation.md) (`/new-initiative`, issue/PR reminders). |
+| **Step closure**  | After **each** step: update every doc, README, issue/PR, and ADR that step invalidated — [AGENTS.md](../AGENTS.md#after-each-step-closure-checklist).                                                                                                                        |
+| **Milestones**    | Issues tie to a **milestone** when part of the roadmap; agents give **Alignment** updates and **escalate** on drift — [milestones & scope](./13-milestones-and-scope.md).                                                                                                    |
 
 ## When to add an ADR
 
