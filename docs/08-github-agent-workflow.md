@@ -6,11 +6,13 @@ This is the **default delivery workflow** for Biblia Studio when using **Cursor 
 
 In Cursor, the MCP server may appear as **`project-0-biblia-studio-github`** (or similar); tool **names** below are stable.
 
+**Human as guide:** they direct; agents run git/GitHub steps and **ask** before irreversible moves (see **[`AGENTS.md` § Human partnership](../AGENTS.md#human-partnership-reports-and-ownership)**). Close substantive updates with **Done** / **Next**.
+
 ## Principles
 
 1. **Every change ties to an Issue** — No drive-by work without a number to cite in the PR.
 2. **One PR per issue** (or one clearly scoped PR that lists every issue it closes).
-3. **Humans merge** — Agents open PRs; **do not** `merge_pull_request` unless a maintainer explicitly asks in that task.
+3. **Merge explicitly** — Agents open PRs; **`merge_pull_request`** only after the human **asks** you to merge in that task **or** answers **yes** when you **ask** whether they want you to merge once CI is green. If they say they will merge themselves, stop there. See [`AGENTS.md`](../AGENTS.md#github-delivery).
 4. **Draft first** — Open the PR as **draft** until `lint` / `check-types` / `build` (as applicable) are noted in the PR body.
 5. **Local git for real edits** — Implement in the workspace, run Bun/Turbo locally, **push** with the terminal; use MCP for **issues, comments, and PR metadata** (not as a substitute for normal commits on large changes).
 
@@ -33,7 +35,7 @@ flowchart LR
   B --> P[Push to origin]
   P --> PR[Create PR via MCP]
   PR --> R[Human review]
-  R --> M[Human merge]
+  R --> M[Merge when ready]
 ```
 
 ### 1. Intake (human or agent)
@@ -93,26 +95,26 @@ Use **`create_pull_request`** with:
 - **`add_issue_comment`** — short updates (e.g. “Opened draft PR #57”, “Blocked on API scope decision”).
 - When scope changes, **`issue_write`** `method: "update"` (title/body/labels) with human agreement.
 
-### 8. Review and merge (human)
+### 8. Review and merge
 
 - Human reviews, requests changes, or approves.
 - **CI** must be green — the repo runs `lint`, `check-types`, and `build` on every PR ([`ci.yml`](../../.github/workflows/ci.yml)); see [CI & branch protection](./09-ci-and-branch-protection.md).
 - **Agent:** address review with new commits + optional **`add_issue_comment`** / PR discussion (PR comments can use issue-style tools where applicable; review threads may use PR-specific tools).
-- **Human:** merge on GitHub when satisfied. **Agents do not merge** by default.
+- **Who merges:** Human merges on GitHub when they prefer to own that step. **Agents may merge** using MCP only when the human **instructs** them to in that task or **confirms** after the agent **asked** whether to merge once checks pass — see [`AGENTS.md` § GitHub delivery](../AGENTS.md#github-delivery).
 
 ## MCP tools reference (common)
 
-| Step             | Tool                           | Notes                                                                                   |
-| ---------------- | ------------------------------ | --------------------------------------------------------------------------------------- |
-| Create issue     | `issue_write`                  | `method: "create"`                                                                      |
-| Read issue       | `issue_read`                   | `get`, `get_comments`, …                                                                |
-| Comment on issue | `add_issue_comment`            | Works for PR conversation when using PR number as `issue_number` (per tool description) |
-| List / search    | `list_issues`, `search_issues` | Triage                                                                                  |
-| Branch on GitHub | `create_branch`                | Optional                                                                                |
-| Open PR          | `create_pull_request`          | Use `draft: true` initially                                                             |
-| Update PR        | `update_pull_request`          | Mark ready for review, edit body                                                        |
-| Read PR          | `pull_request_read`            | Diff, files, checks                                                                     |
-| **Avoid**        | `merge_pull_request`           | **Human only** unless explicitly instructed                                             |
+| Step             | Tool                           | Notes                                                                                    |
+| ---------------- | ------------------------------ | ---------------------------------------------------------------------------------------- |
+| Create issue     | `issue_write`                  | `method: "create"`                                                                       |
+| Read issue       | `issue_read`                   | `get`, `get_comments`, …                                                                 |
+| Comment on issue | `add_issue_comment`            | Works for PR conversation when using PR number as `issue_number` (per tool description)  |
+| List / search    | `list_issues`, `search_issues` | Triage                                                                                   |
+| Branch on GitHub | `create_branch`                | Optional                                                                                 |
+| Open PR          | `create_pull_request`          | Use `draft: true` initially                                                              |
+| Update PR        | `update_pull_request`          | Mark ready for review, edit body                                                         |
+| Read PR          | `pull_request_read`            | Diff, files, checks                                                                      |
+| Merge PR         | `merge_pull_request`           | Use only when the human asked you to merge or said yes after you asked — see `AGENTS.md` |
 
 ## When this workflow does not apply
 

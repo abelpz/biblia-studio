@@ -1,6 +1,15 @@
 # Instructions for AI coding agents
 
-Humans supervise and review all changes. Optimize for **small, reviewable diffs**, **traceable decisions**, and **safe handling of scripture-related and Door43-adjacent systems**.
+The human **guides** the work (priorities, scope, product calls). Agents **execute** implementation, tooling, git, and CI-flavored checks within those guardrails. Optimize for **small, reviewable diffs**, **traceable decisions**, and **safe handling** of scripture-related and Door43-adjacent systems.
+
+## Human partnership: reports and ownership
+
+- **Guide, not implementer-by-default.** Treat the human as a **boss or sponsor**, not as someone you assign homework to. **Do not** end with a list of steps _they_ must run (clone, pull, merge in the UI, click here) unless they explicitly want instructions only. You **perform** every action you can through the editor, shell, and MCP—then report results.
+- **Ask before you cross a decision point.** Before merge, scope expansion, destructive commands, publishing secrets, or anything hard to undo: **ask** whether to proceed (or wait for their answer). If they have already told you in this thread to "keep going" or "do it without asking until blocked," follow that until they change it.
+- **End every substantive reply** with a short closing block (even short tasks):
+
+**Done:** what you completed this turn.  
+**Next:** the single next action you will take (or propose), or **Next:** Paused — waiting for your go-ahead on … — or **Next:** None if the thread is complete.
 
 ## Read first
 
@@ -13,7 +22,7 @@ Humans supervise and review all changes. Optimize for **small, reviewable diffs*
 5. **[`docs/05-hexagonal-apps.md`](./docs/05-hexagonal-apps.md)** — apps: ports & adapters
 6. **[`docs/06-ai-and-human-workflow.md`](./docs/06-ai-and-human-workflow.md)** — review gates, security, dependencies
 7. **[`docs/07-github-mcp.md`](./docs/07-github-mcp.md)** — GitHub MCP: set `GITHUB_MCP_PAT`, restart Cursor
-8. **[`docs/08-github-agent-workflow.md`](./docs/08-github-agent-workflow.md)** — **default GitHub workflow** (issues → branch → push → PR via MCP); humans merge
+8. **[`docs/08-github-agent-workflow.md`](./docs/08-github-agent-workflow.md)** — **default GitHub workflow** (issues → branch → push → PR via MCP); **who merges** — see **GitHub delivery** below
 9. **[`docs/10-first-project.md`](./docs/10-first-project.md)** — checklist before the first real feature (CI on GitHub, branch protection, labels)
 10. **[`docs/11-new-project-workflow.md`](./docs/11-new-project-workflow.md)** — **human + agent** discovery; package boundaries and modularity **emerge**—update [`docs/02-package-map.md`](./docs/02-package-map.md) when seams stabilize
 11. **[`docs/12-workflow-automation.md`](./docs/12-workflow-automation.md)** — **`/new-initiative`** in Cursor; GitHub bot comments on agent issues / PRs without `Closes #`; merged PR **head branches** are deleted via [`cleanup-merged-branch.yml`](./.github/workflows/cleanup-merged-branch.yml)
@@ -24,7 +33,15 @@ For Door43 / unfoldingWord **formats and APIs**, link to upstream; do not copy l
 
 ### GitHub delivery
 
-When work is tracked on GitHub, follow **[`docs/08-github-agent-workflow.md`](./docs/08-github-agent-workflow.md)**: one issue per slice, branch `agent/<issue>-slug`, PR with `Closes #NN`, draft until verified, **do not merge** unless a human explicitly requests it for that task.
+When work is tracked on GitHub, follow **[`docs/08-github-agent-workflow.md`](./docs/08-github-agent-workflow.md)**: one issue per slice, branch `agent/<issue>-slug`, PR with `Closes #NN`, draft until verified.
+
+**Merging pull requests**
+
+- **Default:** After you open or update a PR (and merging is on the table), **ask** whether the human wants **you** to merge once CI is green, or whether they will merge on their own. Do not silently merge, and do not silently assume they will always merge themselves unless they have already said so in this conversation.
+- **If the human clearly tells you to merge** in this task (for example: “merge the PR”, “yes, go ahead and merge”), you may run **`merge_pull_request`** after required checks pass and the PR is appropriate to merge (not draft if your tooling blocks draft merges, respect branch protection).
+- **If the human says not to merge** or to leave the PR draft, follow that.
+
+Goal: humans stay in charge, but agents can **complete the delivery loop** when invited—without surprising merges.
 
 ## Hard rules
 
@@ -109,4 +126,4 @@ Report what you ran and any failures or skips.
 - Copying or mirroring large upstream documentation (link + short summary instead)
 - **Milestone or scope drift** — work no longer matches the issue, acceptance criteria, or milestone; see [`docs/13-milestones-and-scope.md`](./docs/13-milestones-and-scope.md)
 
-State open questions explicitly at the end of your summary so reviewers can decide quickly.
+State open questions explicitly. Still finish with **Done** / **Next** so the human can answer in one glance.
