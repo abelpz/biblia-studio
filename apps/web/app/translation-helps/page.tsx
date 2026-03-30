@@ -12,7 +12,7 @@ type Search = {
   org?: string;
   compare?: string;
   limit?: string;
-  /** With GL→GL **compare**, set **`1`** to load catalog metadata and diff **`projects`** book ids per matched resource. */
+  /** With GL→GL **compare**, set **`1`** to load metadata + git trees and diff manifest **file paths** per matched resource. */
   matrix?: string;
   /** Max matched pairs for the book matrix (each pair = 2 metadata + 2 git-tree requests; 1–40, default 15). */
   matrixMax?: string;
@@ -621,6 +621,39 @@ async function SourceFirstSection({
   );
 }
 
+/** Above this count (or char budget), path lists use `<details>` instead of one long comma line. */
+const MATRIX_PATH_INLINE_MAX = 6;
+const MATRIX_PATH_INLINE_CHARS = 220;
+
+function MatrixPathDiffCell({ paths }: { paths: string[] }) {
+  if (paths.length === 0) {
+    return "—";
+  }
+  const joined = paths.join(", ");
+  if (
+    paths.length <= MATRIX_PATH_INLINE_MAX &&
+    joined.length <= MATRIX_PATH_INLINE_CHARS
+  ) {
+    return <span style={{ wordBreak: "break-word" }}>{joined}</span>;
+  }
+  return (
+    <details className={styles.matrixPathDetails}>
+      <summary className={styles.matrixPathSummary}>
+        {paths.length} path{paths.length === 1 ? "" : "s"}
+      </summary>
+      <div className={styles.matrixPathScroll}>
+        <ul className={styles.matrixPathUl}>
+          {paths.map((p) => (
+            <li key={p}>
+              <code>{p}</code>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </details>
+  );
+}
+
 async function BookMatrixSection({
   port,
   sourceLanguage,
@@ -729,21 +762,17 @@ async function BookMatrixSection({
                 <td
                   style={{ padding: "0.35rem 0.45rem", verticalAlign: "top" }}
                 >
-                  {r.pathsInBoth.length > 0 ? r.pathsInBoth.join(", ") : "—"}
+                  <MatrixPathDiffCell paths={r.pathsInBoth} />
                 </td>
                 <td
                   style={{ padding: "0.35rem 0.45rem", verticalAlign: "top" }}
                 >
-                  {r.pathsOnlyInSource.length > 0
-                    ? r.pathsOnlyInSource.join(", ")
-                    : "—"}
+                  <MatrixPathDiffCell paths={r.pathsOnlyInSource} />
                 </td>
                 <td
                   style={{ padding: "0.35rem 0.45rem", verticalAlign: "top" }}
                 >
-                  {r.pathsOnlyInTarget.length > 0
-                    ? r.pathsOnlyInTarget.join(", ")
-                    : "—"}
+                  <MatrixPathDiffCell paths={r.pathsOnlyInTarget} />
                 </td>
               </tr>
             ))}

@@ -126,3 +126,68 @@
 .footerNav {
   margin-top: 1.5rem;
 }
+
+/* Book matrix: long path lists */
+.matrixPathDetails {
+  margin: 0;
+}
+
+.matrixPathSummary {
+  cursor: pointer;
+  color: #1d4ed8;
+  font-weight: 500;
+  list-style: none;
+  user-select: none;
+}
+
+.matrixPathSummary::-webkit-details-marker {
+  display: none;
+}
+
+.matrixPathSummary::before {
+  content: "▸ ";
+  display: inline-block;
+  transition: transform 0.12s ease;
+}
+
+.matrixPathDetails[open] .matrixPathSummary::before {
+  transform: rotate(90deg);
+}
+
+.matrixPathSummary:hover {
+  text-decoration: underline;
+}
+
+@media (prefers-color-scheme: dark) {
+  .matrixPathSummary {
+    color: #93c5fd;
+  }
+}
+
+.matrixPathScroll {
+  max-height: 14rem;
+  overflow-y: auto;
+  margin-top: 0.35rem;
+  padding: 0.4rem 0.55rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .matrixPathScroll {
+    background: #111827;
+    border-color: #334155;
+  }
+}
+
+.matrixPathUl {
+  margin: 0;
+  padding-left: 1.15rem;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.matrixPathUl code {
+  word-break: break-word;
+}
