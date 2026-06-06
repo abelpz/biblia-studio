@@ -21,7 +21,7 @@
     "prosemirror-model": "^1.25.0",
     "prosemirror-state": "^1.4.3",
     "prosemirror-view": "^1.40.0",
-    "react": "^19.2.0",
+    "react": "^19.2.7",
     "react-dom": "^19.2.0",
     "react-markdown": "^10.1.0",
     "remark-gfm": "^4.0.1"
@@ -30,7 +30,7 @@
     "@repo/eslint-config": "*",
     "@repo/typescript-config": "*",
     "@types/node": "^25.5.0",
-    "@types/react": "19.2.14",
+    "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3",
     "eslint": "^9.39.1",
     "typescript": "6.0.2",
